@@ -33,6 +33,13 @@ namespace App.ViewModels
    
         [DisplayName("Disponível?")]
         public bool IsAvailable { get; set; }
+
+        [Required(ErrorMessage = "Campo requerido")]
+        [DisplayName("Categoria")]
+        public Guid CategoryId { get; set; }
         public CategoryViewModel Category { get; set; }
+
+        //list to select in the form
+        public IEnumerable<CategoryViewModel> Categories { get; set; }
     }
 }
