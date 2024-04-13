@@ -6,5 +6,9 @@ namespace Business.Interfaces
     {
         Task<IEnumerable<Product>> GetProductsByCategory(Guid CategoryId);
 
+        Task<IEnumerable<Product>> GetProductsandCategory();
+
+        Task<Product> GetProductandCategoryById(Guid Id);
+
     }
 }
