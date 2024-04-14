@@ -94,6 +94,7 @@ namespace App.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
+            
             if(categoryViewModel == null)
             {
                 return NotFound();

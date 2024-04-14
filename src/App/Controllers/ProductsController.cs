@@ -48,9 +48,16 @@ namespace App.Controllers
                 return View(productViewModel);
             }
 
+            var imgPrefix = Guid.NewGuid() + "_";
+
+            if(productViewModel.ImageUpload != null)
+            {
+                productViewModel.Image = imgPrefix + productViewModel.ImageUpload.FileName;
+            }
+
             await _productRepository.Add(_mapper.Map<Product>(productViewModel));
 
-            return View(productViewModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(Guid id)
@@ -76,10 +83,34 @@ namespace App.Controllers
             {
                 return NotFound();
             }
+
+            var productUpdate = await GetProduct(id);
+
+            productViewModel.Image = productUpdate.Image;
+
             if (!ModelState.IsValid)
             {
                 return View(productViewModel);
             }
+
+            if (productViewModel.ImageUpload != null)
+            {
+                var imgPrefix = Guid.NewGuid() + "_";
+
+
+                if (!await UploadFile(productViewModel.ImageUpload, imgPrefix))
+                {
+                    return View(productViewModel);
+                }
+
+                if (productViewModel.Image != null)
+                {
+                    DeleteFile(productViewModel.Image);
+                }
+
+                productViewModel.Image = imgPrefix + productViewModel.ImageUpload.FileName;
+            }
+
             await _productRepository.Update(_mapper.Map<Product>(productViewModel));
 
             return RedirectToAction(nameof(Index));
@@ -125,6 +156,37 @@ namespace App.Controllers
             return product;
         }
         //return list of categories
+
+        private async Task<bool> UploadFile(IFormFile file, string imgPrefix)
+        {
+            if (file.Length <= 0 || file == null) return false;
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgPrefix + file.FileName);
+
+            if(System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError(String.Empty, "Já existe um ficheiro com este nome");
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return true;
+
+        }
+
+        private static void DeleteFile(string file)
+        {
+         
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", file);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+        }
 
     }
 }

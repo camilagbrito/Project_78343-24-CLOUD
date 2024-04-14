@@ -28,7 +28,6 @@ namespace App.ViewModels
         public string Image { get; set; }
 
         [DisplayName("Imagem do Produto")]
-        [StringLength(200, ErrorMessage = "Máximo 200 caracteres")]
         public IFormFile ImageUpload { get; set; }
    
         [DisplayName("Disponível?")]
@@ -37,6 +36,8 @@ namespace App.ViewModels
         [Required(ErrorMessage = "Campo requerido")]
         [DisplayName("Categoria")]
         public Guid CategoryId { get; set; }
+      
+        [DisplayName("Categoria")]
         public CategoryViewModel Category { get; set; }
 
         //list to select in the form
