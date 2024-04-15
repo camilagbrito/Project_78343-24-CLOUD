@@ -103,7 +103,7 @@ namespace App.Controllers
             return View(categoryViewModel);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {

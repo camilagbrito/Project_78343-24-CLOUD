@@ -28,7 +28,12 @@ namespace App.Controllers
         {
             var productViewModel = await GetProduct(id);
 
-            return View();
+            if (productViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(productViewModel);
         }
 
         public async Task <IActionResult> Create()
@@ -120,7 +125,7 @@ namespace App.Controllers
         {
             var product = await GetProduct(id);
 
-            if(product == null)
+            if(id == null)
             {
                 return NotFound();
             }
@@ -128,18 +133,21 @@ namespace App.Controllers
             return View(product);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Guid id, ProductViewModel productViewModel)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var product = await GetProduct(id);
 
-            if (product == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
+            DeleteFile(product.Image);
+
             await _productRepository.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
 

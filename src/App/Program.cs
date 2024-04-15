@@ -1,3 +1,4 @@
+using App.Config;
 using Business.Interfaces;
 using Data.Context;
 using Data.Repository;
@@ -38,5 +39,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseGlobalizationConfig();
 
 app.Run();
