@@ -9,6 +9,7 @@
         public bool IsAvailable { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
+        public IEnumerable<OrderItem> OrderItems { get; set; }
 
     }
 }

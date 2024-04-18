@@ -22,6 +22,10 @@ namespace Data.Mappings
             builder.Property(p => p.Image)
                 .HasColumnType("varchar(100)");
 
+            builder.HasMany(p => p.OrderItems)
+               .WithOne(i => i.Product)
+               .HasForeignKey(i => i.ProductId);
+
             builder.ToTable("Products");
         }
     }
