@@ -5,7 +5,7 @@ using Business.Models;
 using Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Controllers
+namespace App.Areas.Admin.Controllers
 {
     public class CategoriesController : Controller
     {
@@ -18,7 +18,7 @@ namespace App.Controllers
             _categoryRepository = repository;
             _mapper = mapper;
         }
-    
+
 
         public async Task<IActionResult> Index()
         {
@@ -28,8 +28,8 @@ namespace App.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
-            
-            if(categoryViewModel == null)
+
+            if (categoryViewModel == null)
             {
                 return NotFound();
             }
@@ -44,7 +44,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create (CategoryViewModel categoryViewModel)
+        public async Task<IActionResult> Create(CategoryViewModel categoryViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -62,7 +62,7 @@ namespace App.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
-            
+
             if (categoryViewModel == null)
             {
                 return NotFound();
@@ -75,14 +75,14 @@ namespace App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, CategoryViewModel categoryViewModel)
         {
-            if(id != categoryViewModel.Id)
+            if (id != categoryViewModel.Id)
             {
                 return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
-              return View(categoryViewModel);
+                return View(categoryViewModel);
             }
 
             var category = _mapper.Map<Category>(categoryViewModel);
@@ -94,8 +94,8 @@ namespace App.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
-            
-            if(categoryViewModel == null)
+
+            if (categoryViewModel == null)
             {
                 return NotFound();
             }
@@ -109,7 +109,7 @@ namespace App.Controllers
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
 
-            if(categoryViewModel == null)
+            if (categoryViewModel == null)
             {
                 return NotFound();
             }

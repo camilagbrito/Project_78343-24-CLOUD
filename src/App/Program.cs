@@ -1,5 +1,6 @@
 using App.Config;
 using Business.Interfaces;
+using Business.Models;
 using Data.Context;
 using Data.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +15,10 @@ builder.Services.AddDbContext<EcomDbContext>(options =>
 builder.Services.AddScoped<EcomDbContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddMemoryCache();
-builder.Services.AddSession();
-
 var app = builder.Build();
 
 
@@ -41,13 +35,15 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.UseGlobalizationConfig();
 

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<App.ViewModels.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Produtos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <hr />
+            <img src="~/images/@item.Image" alt="@item.Image" style="width:100px; height:100px" />
+            <h4>
+               @Html.DisplayFor(modelItem => item.Name)
+            </h4>
+            <p>
+               @Html.DisplayFor(modelItem => item.Price)
+            </p>
+
+            <div>
+                <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id">Ver detalhes</a>
+            </div>
+            <hr />
+        </div>
+    }
+</div>
+
+
