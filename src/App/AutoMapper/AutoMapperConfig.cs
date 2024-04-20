@@ -11,6 +11,9 @@ namespace App.AutoMapper
         {
             CreateMap<Category, CategoryViewModel>().ReverseMap();
             CreateMap<Product, ProductViewModel>().ReverseMap();
+            CreateMap<OrderItem, OrderItemViewModel>().ReverseMap();
+            CreateMap<Order, OrderViewModel>().ReverseMap();
+            
         }
     }
 }
