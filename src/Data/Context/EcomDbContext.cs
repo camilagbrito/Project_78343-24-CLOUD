@@ -1,9 +1,11 @@
 ﻿using Business.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context
 {
-    public class EcomDbContext : DbContext
+    public class EcomDbContext : IdentityDbContext<IdentityUser>
     {
         public EcomDbContext(DbContextOptions<EcomDbContext> options) : base(options)
         { 
