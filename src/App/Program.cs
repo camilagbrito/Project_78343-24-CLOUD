@@ -3,7 +3,9 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Context;
 using Data.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<EcomDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<EcomDbContext>()
+            .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<EcomDbContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -35,6 +41,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
