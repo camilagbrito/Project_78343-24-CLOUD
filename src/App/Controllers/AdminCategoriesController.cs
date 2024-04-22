@@ -2,18 +2,17 @@
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
-using Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Areas.Admin.Controllers
+namespace App.Controllers
 {
-    public class CategoriesController : Controller
+    public class AdminCategoriesController : Controller
     {
 
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoriesController(ICategoryRepository repository, IMapper mapper)
+        public AdminCategoriesController(ICategoryRepository repository, IMapper mapper)
         {
             _categoryRepository = repository;
             _mapper = mapper;
