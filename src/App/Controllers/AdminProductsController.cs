@@ -4,15 +4,15 @@ using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Areas.Admin.Controllers
+namespace App.Controllers
 {
-    public class ProductsController : Controller
+    public class AdminProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public AdminProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -54,6 +54,11 @@ namespace App.Areas.Admin.Controllers
             }
 
             var imgPrefix = Guid.NewGuid() + "_";
+
+            if (!await UploadFile(productViewModel.ImageUpload, imgPrefix))
+            {
+                return View(productViewModel);
+            }
 
             if (productViewModel.ImageUpload != null)
             {
