@@ -22,48 +22,6 @@ namespace Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Business.Models.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApplicationId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationId")
-                        .IsUnique()
-                        .HasFilter("[ApplicationId] IS NOT NULL");
-
-                    b.ToTable("Addresses", (string)null);
-                });
-
             modelBuilder.Entity("Business.Models.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -91,12 +49,10 @@ namespace Data.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Orders", (string)null);
                 });
@@ -225,11 +181,6 @@ namespace Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -281,10 +232,6 @@ namespace Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -366,45 +313,6 @@ namespace Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Business.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("Business.Models.Address", b =>
-                {
-                    b.HasOne("Business.Models.ApplicationUser", "User")
-                        .WithOne("Address")
-                        .HasForeignKey("Business.Models.Address", "ApplicationId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Business.Models.Order", b =>
-                {
-                    b.HasOne("Business.Models.ApplicationUser", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Business.Models.OrderItem", b =>
@@ -498,13 +406,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Business.Models.Product", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("Business.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Address");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
