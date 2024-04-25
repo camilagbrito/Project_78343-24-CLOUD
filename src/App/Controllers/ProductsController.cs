@@ -1,6 +1,7 @@
 ﻿using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
+using Business.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Controllers
@@ -23,5 +24,17 @@ namespace App.Controllers
         {
             return View(_mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository.GetProductsandCategory()));
         }
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var productViewModel = _mapper.Map<ProductViewModel>(await _productRepository.GetProductandCategoryById(id));
+
+            if (productViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(productViewModel);
+        }
+
     }
 }
