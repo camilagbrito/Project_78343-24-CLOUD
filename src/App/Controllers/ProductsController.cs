@@ -11,13 +11,11 @@ namespace App.Controllers
     {
 
         private readonly IProductRepository _productRepository;
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
-
-        public ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        
+        public ProductsController(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
-            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
         public async Task<IActionResult> List()

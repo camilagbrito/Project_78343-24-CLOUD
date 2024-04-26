@@ -20,7 +20,7 @@ namespace Data.Mappings
                 .HasColumnType("varchar(200)");
 
             builder.Property(p => p.Image)
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(500)");
 
             builder.HasMany(p => p.OrderItems)
                .WithOne(i => i.Product)
