@@ -13,6 +13,8 @@ namespace App.AutoMapper
             CreateMap<Product, ProductViewModel>().ReverseMap();
             CreateMap<OrderItem, OrderItemViewModel>().ReverseMap();
             CreateMap<Order, OrderViewModel>().ReverseMap();
+            CreateMap<ApplicationUser, RegisterViewModel>().ReverseMap();
+            CreateMap<Address, AddressViewModel>().ReverseMap();
             
         }
     }
