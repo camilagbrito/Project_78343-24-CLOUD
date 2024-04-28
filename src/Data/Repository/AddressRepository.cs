@@ -1,10 +1,11 @@
-﻿using Business.Models;
+﻿using Business.Interfaces;
+using Business.Models;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
 {
-    internal class AddressRepository : Repository<Address>
+    public class AddressRepository : Repository<Address>, IAddressRepository
     {
         public AddressRepository(EcomDbContext context) : base(context)
         {

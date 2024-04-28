@@ -12,6 +12,8 @@ namespace App.ViewModels
         [DisplayName("Nome")]
         [StringLength(50, ErrorMessage = "Máximo 50 caracteres")]
         public string Name { get; set; }
+
+        [DisplayName("Produtos")]
         public ICollection<ProductViewModel> Products { get; set; }
     }
 }

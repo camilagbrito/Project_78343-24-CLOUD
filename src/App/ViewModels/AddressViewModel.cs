@@ -34,6 +34,7 @@ namespace App.ViewModels
         [StringLength(50, ErrorMessage = "Máximo 50 caracteres")]
         [DisplayName("País")]
         public string Country { get; set; }
-        public string UserId {  get; set; }
+        public ApplicationUserViewModel User { get; set; }
+        public string UserId { get; set; }
     }
 }

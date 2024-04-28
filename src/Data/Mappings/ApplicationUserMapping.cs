@@ -9,7 +9,7 @@ namespace Data.Mappings
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-    
+
             builder.Property(u => u.FirstName)
                 .IsRequired()
                 .HasColumnType("varchar(100)");
@@ -18,11 +18,9 @@ namespace Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(100)");
 
-            builder.Property(u => u.Image)
-                .HasColumnType("varchar(100)");
-
-            builder.HasOne(u => u.Address)
-            .WithOne(a => a.User);
+            builder.HasMany(u => u.Addresses)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
 
             builder.HasMany(u => u.Orders)
                    .WithOne(o => o.User)
