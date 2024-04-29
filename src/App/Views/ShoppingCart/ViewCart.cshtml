@@ -1,0 +1,43 @@
+﻿@model ShoppingCartViewModel
+
+<h1>Carrinho de Compras</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Product.Id">+</a>
+                    @item.Quantity
+                    <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="DecreaseFromCart" asp-route-id="@item.Product.Id">-</a>
+                </td>
+                <td>@item.Product.Price</td>
+                <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
+                <input type="hidden" value="@item.Product.Id" />
+                <td>
+                    <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Product.Id"><span class="fa fa-trash" ></span></a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Total:</td>
+            <td>@Model.TotalPrice.ToString("C")</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
