@@ -12,8 +12,7 @@ namespace Business.Models
         public string Region { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
-        [ForeignKey(nameof(Address.User))]
-        public string ApplicationId { get; set; }
+        public string UserId {  get; set; }
         public ApplicationUser User { get; set; }  
 
     }

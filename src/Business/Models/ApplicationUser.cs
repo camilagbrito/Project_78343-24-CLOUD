@@ -9,9 +9,9 @@ namespace Business.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public string Image { get; set; }
-        public Address Address { get; set; }
+        public ICollection<Address> Addresses { get; set; } = new List<Address>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
+
     }
 }
 

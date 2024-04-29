@@ -5,19 +5,8 @@ using System.ComponentModel;
 
 namespace App.ViewModels
 {
-    public class RegisterViewModel
+    public class ApplicationUserViewModel:IdentityUser
     {
-        [Required(ErrorMessage = "Informe o email")]
-        [Display(Name = "Email")]
-        public string UserName { get; set; }
-
-        [Required(ErrorMessage = "Informe a senha")]
-        [DataType(DataType.Password, ErrorMessage ="Senha deve conter letras, número e caracteres especiais")]
-        [MinLength(6, ErrorMessage ="Mínimo 6 caracteres")]
-        [Display(Name = "Senha")]
-        public string Password { get; set; }
-        public string ReturnUrl { get; set; }
-
         [Required(ErrorMessage = "Campo requerido")]
         [DisplayName("Nome")]
         [StringLength(50, ErrorMessage = "Máximo 50 caracteres")]
@@ -32,5 +21,9 @@ namespace App.ViewModels
         [DisplayName("Data de Nascimento")]
         [DataType(DataType.DateTime)]
         public DateTime BirthDate { get; set; }
+
+        [DisplayName("Endereços")]
+        public ICollection<AddressViewModel> Addresses { get; set; } = new List<AddressViewModel>();
+        
     }
 }
