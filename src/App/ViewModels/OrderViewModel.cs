@@ -15,7 +15,8 @@ namespace App.ViewModels
         [DisplayName("Total do Pedido")]
         public decimal Total { get; set; }
         [DisplayName("Cliente")]
-        public Guid UserId { get; set; }
-        public ICollection<OrderItem> Items { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUserViewModel ApplicationUserViewModel { get; set; }
+        public ICollection<OrderItemViewModel> Items { get; set; }
     }
 }
