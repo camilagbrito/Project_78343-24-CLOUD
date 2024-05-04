@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels
 {
-    public class OrderViewModel
+    public class OrderViewModel:Entity
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [DisplayName("Data do Pedido")]
         public DateTime Date { get; set; }

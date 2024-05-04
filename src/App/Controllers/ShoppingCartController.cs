@@ -124,17 +124,22 @@ namespace App.Controllers
         {
             var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
 
-            var order = new Order();
+            //var order = new Order();
+            var orderViewModel = new OrderViewModel(); 
+
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            order.Date = DateTime.Now;
-            order.UserId = user.Id;
-            order.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+            //order.Date = DateTime.Now;
+            //order.UserId = user.Id;
+            //order.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
 
-      
-            await _orderRepository.Add(order);
-          
+            orderViewModel.Date = DateTime.Now;
+            orderViewModel.UserId = user.Id;
+            orderViewModel.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+
+            await _orderRepository.Add(_mapper.Map<Order>(orderViewModel));
+           
             //se utilizador não estiver logado redirecionar para login
 
             foreach (var item in cartItemsSession)
@@ -144,7 +149,7 @@ namespace App.Controllers
                     ProductId = item.Product.Id,
                     Price = item.Product.Price,
                     Quantity = item.Quantity,
-                    OrderId = order.Id
+                    OrderId = orderViewModel.Id
                 };
                 await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
             }

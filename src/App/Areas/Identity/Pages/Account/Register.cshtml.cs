@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using AjaxControlToolkit;
 using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
@@ -57,14 +58,15 @@ namespace App.Areas.Identity.Pages.Account
         public class InputModel
         {
         
-            [Required]
+            [Required (ErrorMessage="Campo requerido")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Campo requerido")]
             [StringLength(100, ErrorMessage = "A {0} deve ter pelo menos {2} e no máximo {1} caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{6,}$", ErrorMessage = "A password deve conter letras maiusculas e minúsculas, números e caracteres especiais.")]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
@@ -73,22 +75,22 @@ namespace App.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "A password e a confirmação devem ser iguais.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Campo requerido")]
             [StringLength(50, ErrorMessage = "O campo {0} deve ter pelo menos {2} e no máximo {1} caracteres.", MinimumLength = 2)]
             [Display(Name = "Nome")]
             public string FirstName {  get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Campo requerido")]
             [StringLength(50, ErrorMessage = "O campo {0} deve ter pelo menos {2} e no máximo {1} caracteres.", MinimumLength = 2)]
             [Display(Name = "Apelido")]
             public string LastName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Campo requerido")]
             [DataType(DataType.Date)]
             [Display(Name = "Data de Nascimento")]
             public DateTime BirthDate { get; set; }
 
-            [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+            [Required(ErrorMessage = "Campo requerido")]
             [DisplayName("Endereço")]
             public AddressViewModel Address { get; set; }
         }
@@ -149,7 +151,7 @@ namespace App.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"Por favor confirme seu email <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -161,13 +163,8 @@ namespace App.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
