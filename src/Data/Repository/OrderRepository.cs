@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Business.Models;
 using Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,18 @@ namespace Data.Repository
     {
         public OrderRepository(EcomDbContext context) : base(context)
         {
+          
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersOrderItemsUser()
+        {
+            return await _context.Orders.AsNoTracking().Include(o => o.User).Include(o => o.Items).ToListAsync();
+        }
+
+        public async Task<Order> GetOrderandItems(Guid id)
+        {
+            return await _context.Orders.AsNoTracking().Include(o => o.Items).FirstOrDefaultAsync(p => p.Id == id);
+        }
+
     }
 }

@@ -27,5 +27,7 @@ namespace App.ViewModels
         [DisplayName("Pedido")]
         public Guid OrderId { get; set; }
 
+        public OrderViewModel Order { get; set; }
+
     }
 }

@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels
 {
-    public class OrderViewModel
+    public class OrderViewModel:Entity
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [DisplayName("Data do Pedido")]
         public DateTime Date { get; set; }
@@ -15,7 +13,8 @@ namespace App.ViewModels
         [DisplayName("Total do Pedido")]
         public decimal Total { get; set; }
         [DisplayName("Cliente")]
-        public Guid UserId { get; set; }
-        public ICollection<OrderItem> Items { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUserViewModel ApplicationUserViewModel { get; set; }
+        public ICollection<OrderItemViewModel> Items { get; set; }
     }
 }

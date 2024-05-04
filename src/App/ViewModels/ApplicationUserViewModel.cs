@@ -24,6 +24,7 @@ namespace App.ViewModels
 
         [DisplayName("Endereços")]
         public ICollection<AddressViewModel> Addresses { get; set; } = new List<AddressViewModel>();
-        
+        public ICollection<OrderViewModel> Orders{ get; set; } = new List<OrderViewModel>();
+
     }
 }

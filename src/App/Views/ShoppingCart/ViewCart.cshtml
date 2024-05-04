@@ -18,9 +18,10 @@
             <tr>
                 <td>@item.Product.Name</td>
                 <td>
-                    <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Product.Id">+</a>
-                    @item.Quantity
                     <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="DecreaseFromCart" asp-route-id="@item.Product.Id">-</a>
+                    @item.Quantity
+                    <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Product.Id">+</a>
+               
                 </td>
                 <td>@item.Product.Price</td>
                 <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
@@ -40,4 +41,9 @@
         </tr>
     </tbody>
 </table>
+<form asp-action="CreateOrder">
+    <input type="submit" value="Finalizar Pedido" class="btn btn-primary" asp-controller="ShoppingCart" asp-action="CreateOrder" />
+    <a class="btn btn-info" asp-controller="Products" asp-action="List">Continuar Comprando</a>
+</form>
+
 

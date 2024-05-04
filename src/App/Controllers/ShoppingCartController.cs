@@ -3,23 +3,31 @@ using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
+using System.Security.Claims;
 
 namespace App.Controllers
 {
     public class ShoppingCartController : Controller
     {
+
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderRepository _orderRepository;
         private ICollection<OrderItemViewModel> cartItems = new List<OrderItemViewModel>();
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+       
 
-        public ShoppingCartController(IOrderItemRepository orderItemRepository, IProductRepository productRepository, IMapper mapper)
+        public ShoppingCartController(UserManager<ApplicationUser> userManager, IOrderItemRepository orderItemRepository, IOrderRepository orderRepository, IProductRepository productRepository, IMapper mapper)
         {
             _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
             _productRepository = productRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -52,12 +60,12 @@ namespace App.Controllers
 
             HttpContext.Session.Set("Cart", cartItemsSession);
 
-            return RedirectToAction("ViewCart");
+            return RedirectToAction(nameof(ViewCart));
         }
 
         public IActionResult ViewCart()
         {
-
+           
             var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
 
             var cartViewModel = new ShoppingCartViewModel
@@ -89,7 +97,7 @@ namespace App.Controllers
 
             HttpContext.Session.Set("Cart", cartItemsSession);
 
-            return RedirectToAction("ViewCart");
+            return RedirectToAction(nameof(ViewCart));
         }
 
         public IActionResult RemoveFromCart(Guid id)
@@ -107,7 +115,50 @@ namespace App.Controllers
 
             HttpContext.Session.Set("Cart", cartItemsSession);
 
-            return RedirectToAction("ViewCart");
+            return RedirectToAction(nameof(ViewCart));
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder()
+        {
+            var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
+
+            //var order = new Order();
+            var orderViewModel = new OrderViewModel(); 
+
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            //order.Date = DateTime.Now;
+            //order.UserId = user.Id;
+            //order.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+
+            orderViewModel.Date = DateTime.Now;
+            orderViewModel.UserId = user.Id;
+            orderViewModel.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+
+            await _orderRepository.Add(_mapper.Map<Order>(orderViewModel));
+           
+            //se utilizador não estiver logado redirecionar para login
+
+            foreach (var item in cartItemsSession)
+            {
+                var orderItemViewModel = new OrderItemViewModel
+                {
+                    ProductId = item.Product.Id,
+                    Price = item.Product.Price,
+                    Quantity = item.Quantity,
+                    OrderId = orderViewModel.Id
+                };
+                await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
+            }
+
+            HttpContext.Session.Set("Cart", new List<ShoppingCartViewModel>());
+
+            return RedirectToAction(nameof(ViewCart));
+
+        }
+
     }
 }

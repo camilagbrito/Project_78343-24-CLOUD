@@ -9,5 +9,8 @@ namespace Business.Interfaces
 {
     public interface IOrderRepository: IRepository<Order>
     {
+        Task<IEnumerable<Order>> GetOrdersOrderItemsUser();
+
+        Task<Order> GetOrderandItems(Guid id);
     }
 }
