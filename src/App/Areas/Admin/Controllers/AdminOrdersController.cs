@@ -12,7 +12,6 @@ using System.Security.Policy;
 namespace App.Areas.Admin.Controllers
 {
 
-    //parei aqui
     [Area("Admin")]
     [Authorize("Admin")]
     [Route("admin/admin-orders")]
@@ -51,11 +50,7 @@ namespace App.Areas.Admin.Controllers
                 };
                 ordersViewModel.Add(orderViewModel);
             }
-
-
             return View(ordersViewModel);
-
-
         }
 
         [Route("order-details/{id:guid}")]
@@ -125,7 +120,5 @@ namespace App.Areas.Admin.Controllers
             order.Items = _mapper.Map<IEnumerable<OrderItemViewModel>>(await _orderItemRepository.GetOrderItemsByOrderId(id));
             return order;
         }
-
-
     }
 }

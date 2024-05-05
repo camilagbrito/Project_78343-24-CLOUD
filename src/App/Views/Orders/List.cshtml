@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<App.ViewModels.OrderViewModel>
 
 @{
-    ViewData["Title"] = "Pedidos";
+    ViewData["Title"] = "Meus Pedidos";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -20,9 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUserViewModel)
             </th>
             <th></th>
         </tr>
@@ -44,11 +41,7 @@
                     @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ApplicationUserViewModel.FullName)
-                </td>
-                <td>
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam></a>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil"></spam>Alterar Status</a>
                 </td>
             </tr>
         }

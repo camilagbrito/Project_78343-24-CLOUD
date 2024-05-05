@@ -9,6 +9,8 @@
 <p>
     <a class="btn btn-info" asp-action="Create">Novo Produto</a>
 </p>
+
+
 <table class="table table-hover">
     <thead class="table-dark">
         <tr>
@@ -55,7 +57,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
-                <td class="text-end">
+                <td>
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam></a>
                     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil"></a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></a>

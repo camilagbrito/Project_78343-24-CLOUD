@@ -2,6 +2,9 @@
 
 <h1>Carrinho de Compras</h1>
 
+    @ViewData["Data"]
+
+<h5 class="text-danger">Limite de 40 itens por produto. Para compras maiores contacte por telefone. </h5>
 <table class="table">
     <thead>
         <tr>
@@ -21,8 +24,8 @@
                     <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="DecreaseFromCart" asp-route-id="@item.Product.Id">-</a>
                     @item.Quantity
                     <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Product.Id">+</a>
-               
                 </td>
+             
                 <td>@item.Product.Price</td>
                 <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
                 <input type="hidden" value="@item.Product.Id" />
