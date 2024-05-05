@@ -11,9 +11,16 @@ namespace Data.Repository
         {
         }
 
+        public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderId(Guid id)
+        {
+            return await _context.OrderItems.AsNoTracking().Include(p => p.Product).Where(o => o.OrderId == id).ToListAsync();
+        }
+
         public async Task<OrderItem> GetOrderItemProduct(Guid id)
         {
             return await _context.OrderItems.AsNoTracking().Include(p => p.Product).FirstOrDefaultAsync(p => p.Id == id);
         }
+
+
     }
 }

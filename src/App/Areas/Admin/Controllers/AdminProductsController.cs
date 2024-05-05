@@ -11,8 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using static System.Net.WebRequestMethods;
 
-namespace App.Controllers
+namespace App.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize("Admin")]
+    [Route("admin/admin-products")]
     public class AdminProductsController : Controller
 
     {
@@ -22,7 +25,7 @@ namespace App.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
-       
+
         public AdminProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, IConfiguration configuration)
         {
             _productRepository = productRepository;
@@ -31,11 +34,13 @@ namespace App.Controllers
             _blobConnectionString = configuration.GetConnectionString("BlobConnectionString");
         }
 
+        [Route("products-list")]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository.GetProductsandCategory()));
         }
 
+        [Route("product-details/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
             var productViewModel = await GetProduct(id);
@@ -48,6 +53,7 @@ namespace App.Controllers
             return View(productViewModel);
         }
 
+        [Route("new-product")]
         public async Task<IActionResult> Create()
         {
             var productViewModel = await SeedCategories(new ProductViewModel());
@@ -56,6 +62,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("new-product")]
         public async Task<IActionResult> Create(ProductViewModel productViewModel)
         {
             productViewModel = await SeedCategories(productViewModel);
@@ -74,7 +81,7 @@ namespace App.Controllers
 
             if (productViewModel.ImageUpload != null)
             {
-                productViewModel.Image = url + imgPrefix + productViewModel.ImageUpload.FileName; 
+                productViewModel.Image = url + imgPrefix + productViewModel.ImageUpload.FileName;
             }
 
             await _productRepository.Add(_mapper.Map<Product>(productViewModel));
@@ -82,6 +89,7 @@ namespace App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("edit-product/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var productViewModel = await GetProduct(id);
@@ -98,6 +106,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("edit-product/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel productViewModel)
         {
 
@@ -138,6 +147,7 @@ namespace App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("delete-product/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var product = await GetProduct(id);
@@ -152,6 +162,7 @@ namespace App.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("delete-product/{id:guid}")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var product = await GetProduct(id);
@@ -221,7 +232,7 @@ namespace App.Controllers
             };
 
             await blobClient.UploadAsync(file.OpenReadStream(), headers);
-           
+
             return true;
 
         }
@@ -230,14 +241,15 @@ namespace App.Controllers
             BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
             BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
 
-            
+
             string[] path = file.Split("/");
 
-            string blobfile = path[path.Length-1];
-            
+            string blobfile = path[path.Length - 1];
+
             BlobClient image = blobContainerClient.GetBlobClient(blobfile);
 
-            if (image.GetBlobLeaseClient() != null) { 
+            if (await image.ExistsAsync() && image.GetBlobLeaseClient() != null)
+            {
                 await image.DeleteAsync();
             }
         }

@@ -12,9 +12,10 @@ namespace Data.Repository
 
         }
 
-        public async Task<Address> GetAddressByUserId(Guid id)
+       
+        public async Task<IEnumerable<Address>> GetAddressesByUserId(string id)
         {
-            return await _context.Address.AsNoTracking().Where(a => a.Id == id).FirstOrDefaultAsync();
+            return await _context.Address.AsNoTracking().Where(a => a.UserId == id).ToListAsync();
         }
     }
 }

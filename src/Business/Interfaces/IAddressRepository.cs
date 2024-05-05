@@ -9,6 +9,6 @@ namespace Business.Interfaces
 {
     public interface IAddressRepository:IRepository<Address>
     {
-        Task<Address> GetAddressByUserId(Guid id);
+        Task<IEnumerable<Address>> GetAddressesByUserId(string id);
     }
 }

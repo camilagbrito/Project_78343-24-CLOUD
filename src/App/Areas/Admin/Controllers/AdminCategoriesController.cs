@@ -2,10 +2,14 @@
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Controllers
+namespace App.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize("Admin")]
+    [Route("admin/admin-categories")]
     public class AdminCategoriesController : Controller
     {
 
@@ -18,24 +22,13 @@ namespace App.Controllers
             _mapper = mapper;
         }
 
-
+        [Route("categories-list")]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(await _categoryRepository.GetAll()));
         }
 
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
-
-            if (categoryViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(categoryViewModel);
-        }
-
+        [Route("new-category")]
         public IActionResult Create()
         {
             return View();
@@ -43,6 +36,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("new-category")]
         public async Task<IActionResult> Create(CategoryViewModel categoryViewModel)
         {
             if (!ModelState.IsValid)
@@ -58,6 +52,7 @@ namespace App.Controllers
 
         }
 
+        [Route("edit-category/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
@@ -72,6 +67,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("edit-category/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id, CategoryViewModel categoryViewModel)
         {
             if (id != categoryViewModel.Id)
@@ -90,6 +86,7 @@ namespace App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("delete-category/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
@@ -104,15 +101,10 @@ namespace App.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("delete-category/{id:guid}")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
-
-            if (categoryViewModel == null)
-            {
-                return NotFound();
-            }
-
+           
             await _categoryRepository.Delete(id);
 
             return RedirectToAction(nameof(Index));

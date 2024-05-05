@@ -3,7 +3,7 @@
     public class ShoppingCartViewModel
     {
         public OrderViewModel Order { get; set; }
-        public List<OrderItemViewModel> Items { get; set; }
+        public IEnumerable<OrderItemViewModel> Items { get; set; }
         public decimal TotalPrice { get; set; }
         public int TotalQuantity { get; set; }
     }

@@ -17,14 +17,16 @@ namespace App.ViewModels
         [StringLength(50, ErrorMessage = "Máximo 50 caracteres")]
         public string LastName { get; set; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         [Required(ErrorMessage = "Campo requerido")]
         [DisplayName("Data de Nascimento")]
         [DataType(DataType.DateTime)]
         public DateTime BirthDate { get; set; }
 
         [DisplayName("Endereços")]
-        public ICollection<AddressViewModel> Addresses { get; set; } = new List<AddressViewModel>();
-        public ICollection<OrderViewModel> Orders{ get; set; } = new List<OrderViewModel>();
+        public IEnumerable<AddressViewModel> Addresses { get; set; } = new List<AddressViewModel>();
+        public IEnumerable<OrderViewModel> Orders{ get; set; } = new List<OrderViewModel>();
 
     }
 }
