@@ -17,15 +17,21 @@ namespace Data.Repository
           
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersOrderItemsUser()
+        public async Task<IEnumerable<Order>> GetOrdersAndUsers()
         {
-            return await _context.Orders.AsNoTracking().Include(o => o.User).Include(o => o.Items).ToListAsync();
+            return await _context.Orders.AsNoTracking().Include(o => o.User).ThenInclude(u => u.Addresses).ToListAsync();
         }
 
         public async Task<Order> GetOrderandItems(Guid id)
         {
-            return await _context.Orders.AsNoTracking().Include(o => o.Items).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Orders.AsNoTracking().Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == id);
         }
+
+        public async Task<Order> GetOrderUser(Guid id)
+        {
+            return await _context.Orders.AsNoTracking().Include(o => o.User).FirstOrDefaultAsync(o => o.Id == id);
+        }
+
 
     }
 }

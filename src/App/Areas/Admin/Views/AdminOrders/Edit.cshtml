@@ -1,0 +1,40 @@
+﻿@model App.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Alterar Status do Pedido";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h2>"@Model.Id"</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="">Selecione o status atual</option>
+                    @foreach (var status in Model.ListStatus)
+                    {
+                        <option value="@status">@status</option>
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a class="btn btn-info" asp-action="List">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

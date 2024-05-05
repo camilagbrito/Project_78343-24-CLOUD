@@ -14,6 +14,6 @@ namespace App.ViewModels
         public string Name { get; set; }
 
         [DisplayName("Produtos")]
-        public ICollection<ProductViewModel> Products { get; set; }
+        public IEnumerable<ProductViewModel> Products { get; set; }
     }
 }

@@ -16,10 +16,13 @@
                 @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Total)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApplicationUserViewModel.FirstName)
+                @Html.DisplayNameFor(model => model.ApplicationUserViewModel)
             </th>
             <th></th>
         </tr>
@@ -34,16 +37,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </th>
                 <td>
                     @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ApplicationUserViewModel.UserName)
+                    @Html.DisplayFor(modelItem => item.ApplicationUserViewModel.FullName)
                 </td>
                 <td class="text-end">
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam></a>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil"></a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil"></spam>Alterar Status</a>
                 </td>
             </tr>
         }
