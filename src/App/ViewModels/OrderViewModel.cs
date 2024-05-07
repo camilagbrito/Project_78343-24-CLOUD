@@ -9,6 +9,7 @@ namespace App.ViewModels
     {
 
         [DisplayName("Data do Pedido")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [DisplayName("Total do Pedido")]

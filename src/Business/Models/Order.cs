@@ -12,6 +12,5 @@ namespace Business.Models
        public OrderStatus Status {  get; set; }
        public ApplicationUser User { get; set; }
        public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
-
     }
 }

@@ -25,6 +25,15 @@ namespace Data.Mappings
             builder.HasMany(u => u.Orders)
                    .WithOne(o => o.User)
                    .HasForeignKey(o => o.UserId);
+
+            builder.HasMany(u => u.Posts)
+                 .WithOne(p => p.User)
+                 .HasForeignKey(p => p.UserId);
+
+            builder.HasMany(u => u.Comments)
+                .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId);
+
         }
     }
 }
