@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Business.Models;
 using Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,13 @@ namespace Data.Repository
     {
         public PostRepository(EcomDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Post>> GetPostsUsersAndComments()
+        {
+        
+          return await _context.Posts.AsNoTracking().Include(p => p.User).Include(p => p.Comments).ToListAsync();
+          
         }
     }
 }

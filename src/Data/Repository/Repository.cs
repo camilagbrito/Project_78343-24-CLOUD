@@ -58,8 +58,9 @@ namespace Data.Repository
         {
             //created a new instance using ID to not search directly
             //from the database
+            var entityDelete = await _dbSet.FindAsync(id);
 
-            _dbSet.Remove(new TEntity {Id = id});
+            _dbSet.Remove(entityDelete);
             await SaveChanges();
 
         }

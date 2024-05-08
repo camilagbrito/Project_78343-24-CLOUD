@@ -9,5 +9,6 @@ namespace Business.Interfaces
 {
     public interface IPostRepository: IRepository<Post>
     {
+        Task<IEnumerable<Post>> GetPostsUsersAndComments();
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(EcomDbContext))]
-    [Migration("20240507143528_Forum")]
-    partial class Forum
+    [Migration("20240508123455_PostsComments")]
+    partial class PostsComments
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,28 +108,6 @@ namespace Data.Migrations
                     b.ToTable("Comments", (string)null);
                 });
 
-            modelBuilder.Entity("Business.Models.Forum", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("varchar(5000)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Forums", (string)null);
-                });
-
             modelBuilder.Entity("Business.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -195,9 +173,6 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ForumId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Image")
                         .HasColumnType("varchar(500)");
 
@@ -209,8 +184,6 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ForumId");
 
                     b.HasIndex("UserId");
 
@@ -532,16 +505,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Business.Models.Post", b =>
                 {
-                    b.HasOne("Business.Models.Forum", "Forum")
-                        .WithMany("Posts")
-                        .HasForeignKey("ForumId")
-                        .IsRequired();
-
                     b.HasOne("Business.Models.ApplicationUser", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Forum");
 
                     b.Navigation("User");
                 });
@@ -610,11 +576,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Business.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Business.Models.Forum", b =>
-                {
-                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Business.Models.Order", b =>

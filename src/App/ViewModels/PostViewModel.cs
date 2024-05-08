@@ -6,6 +6,9 @@ namespace App.ViewModels
 {
     public class PostViewModel
     {
+        [Key]
+        public Guid Id { get; set; }
+
         [Required(ErrorMessage = "Campo requerido")]
         [DisplayName("Título")]
         [StringLength(200, ErrorMessage = "Máximo 200 caracteres")]
@@ -19,17 +22,14 @@ namespace App.ViewModels
         [DisplayName("Data de Criação")]
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
+
         public string Image { get; set; }
 
-        [DisplayName("Imagem")]
-        [StringLength(500, ErrorMessage = "Máximo 500 caracteres")]
         public IFormFile ImageUpload { get; set; }
-        public Forum Forum { get; set; }
-        public Guid ForumId { get; set; }
-
+    
         [DisplayName("Utilizador")]
-        public ApplicationUser User { get; set; }
+        public ApplicationUserViewModel User { get; set; }
         public string UserId { get; set; }
-        public IEnumerable<Comment> Comments { get; set; }
+        public IEnumerable<CommentViewModel> Comments { get; set; }
     }
 }

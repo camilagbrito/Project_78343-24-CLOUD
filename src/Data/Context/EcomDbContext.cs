@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace Data.Context
 {
@@ -18,6 +19,10 @@ namespace Data.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers {  get; set; }
         public DbSet<Address> Address { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+
+
 
 
 
@@ -26,8 +31,10 @@ namespace Data.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EcomDbContext).Assembly);
 
             //disable delete cascade
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(x => x.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull; 
-            
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(x => x.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+
+            modelBuilder.Entity<Post>().HasMany(p => p.Comments).WithOne(c => c.Post).OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(modelBuilder);
         }
 
