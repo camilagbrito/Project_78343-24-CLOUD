@@ -16,6 +16,14 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DockerHub'
+    repository: 'camilagbrito/projeto-rumos-camila'
+    command: 'buildAndPush'
+    Dockerfile: './Dockerfile'
+    buildContext: '.'
+    tags: 
+      $(Build.BuildId)
+      latest
 
