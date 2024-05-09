@@ -20,4 +20,12 @@ steps:
     tags: |
       $(Build.BuildId)
       latest
-
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'CamilaSubscription(b9793c71-6f87-40a9-833c-d79cb6c8ad35)'
+    appType: 'webAppContainer'
+    WebAppName: 'project78343-24-rumos'
+    DockerNamespace: 'camilagbrito48'
+    DockerRepository: 'projeto-rumos-camila'
+    DockerImageTag: '$(Build.BuildId)'
