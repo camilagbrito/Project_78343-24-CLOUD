@@ -10,7 +10,7 @@ namespace Data.Mappings
         {
             builder.HasKey(c => c.Id);
 
-            builder.Property(c=> c.Name)
+            builder.Property(c => c.Name)
                 .IsRequired()
                 .HasColumnType("varchar(50)");
 
@@ -19,7 +19,6 @@ namespace Data.Mappings
                 .HasForeignKey(x => x.CategoryId);
 
             builder.ToTable("Categories");
-
         }
     }
 }

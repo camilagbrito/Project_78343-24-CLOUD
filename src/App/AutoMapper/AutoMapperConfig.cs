@@ -16,6 +16,8 @@ namespace App.AutoMapper
             CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();
             CreateMap<Address, AddressViewModel>().ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();  
+            CreateMap<Post, PostViewModel>().ReverseMap();
+            CreateMap<Comment, CommentViewModel>().ReverseMap();
         }
     }
 }

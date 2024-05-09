@@ -1,0 +1,31 @@
+﻿@model IEnumerable<App.ViewModels.PostViewModel>
+
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<h1>Bem-Vindo a Comunidade do Site</h1>
+<h3>Fique a vontade para compartilhar suas dúvidas e dicas!</h3>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-8">
+            <hr />
+            <h5>@Html.DisplayFor(modelItem => item.User.FullName)</h5>
+            <h4>
+                @Html.DisplayFor(modelItem => item.Title)
+            </h4>
+            <p>
+                @Html.DisplayFor(modelItem => item.Content)
+            </p>
+            <img src="@item.Image" alt="@item.Image" style="width:300px; height:300px; align-items:center" />
+            <div>
+                <a class="btn btn-primary" asp-controller="" asp-action="" asp-route-id="@item.Id">Comentar</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></a>
+            </div>
+            <hr />
+
+        </div>
+    }
+</div>

@@ -1,0 +1,166 @@
+﻿using App.ViewModels;
+using AutoMapper;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using Business.Interfaces;
+using Business.Models;
+using Data.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Security.Policy;
+using Azure.Storage.Blobs.Specialized;
+
+namespace App.Controllers
+{
+    [Route("posts/")]
+    [Authorize]
+    public class PostsController : Controller
+    {
+        private const string url = "https://project78343images.blob.core.windows.net/postsimages/";
+        private const string ContainerName = "postsimages";
+        private readonly string _blobConnectionString;
+        private readonly IPostRepository _postRepository;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public PostsController(IPostRepository postRepository, IMapper mapper, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        {
+            _postRepository = postRepository;
+            _mapper = mapper;
+            _userManager = userManager;
+            _blobConnectionString = configuration.GetConnectionString("BlobConnectionString");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> List()
+        {
+           
+            return View(_mapper.Map<IEnumerable<PostViewModel>>(await _postRepository.GetPostsUsersAndComments()));
+       
+        }
+
+        [Route("new-post")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("new-post")]
+        public async Task<IActionResult> Create(PostViewModel postViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(postViewModel);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(postViewModel);
+            }
+
+            var imgPrefix = Guid.NewGuid() + "_";
+
+            if (!await UploadFileStorage(postViewModel.ImageUpload, imgPrefix))
+            {
+                return View(postViewModel);
+            }
+
+            if (postViewModel.ImageUpload != null)
+            {
+                postViewModel.Image = url + imgPrefix + postViewModel.ImageUpload.FileName;
+            }
+
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            postViewModel.CreatedDate = DateTime.Now;
+            postViewModel.UserId = user.Id;
+  
+            await _postRepository.Add(_mapper.Map<Post>(postViewModel));
+
+            return RedirectToAction(nameof(List));
+        }
+
+        [Route("delete-post/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var post =  _mapper.Map<PostViewModel>(await _postRepository.GetbyId(id)); 
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Route("delete-post/{id:guid}")]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            
+            var post = _mapper.Map<PostViewModel>(await _postRepository.GetbyId(id));
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            DeleteFileStorage(post.Image);
+
+            await _postRepository.Delete(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        private async Task<bool> UploadFileStorage(IFormFile file, string imgPrefix)
+        {
+            if (file.Length <= 0 || file == null) return false;
+
+            var name = imgPrefix + file.FileName;
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+            await blobContainerClient.CreateIfNotExistsAsync();
+
+            BlobClient blobClient = blobContainerClient.GetBlobClient(name);
+
+            BlobHttpHeaders headers = new BlobHttpHeaders()
+            {
+                ContentType = file.ContentType
+            };
+
+            await blobClient.UploadAsync(file.OpenReadStream(), headers);
+
+            return true;
+
+        }
+        private async void DeleteFileStorage(string file)
+        {
+            BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+
+            string[] path = file.Split("/");
+
+            string blobfile = path[path.Length - 1];
+
+            BlobClient image = blobContainerClient.GetBlobClient(blobfile);
+
+            if (await image.ExistsAsync() && image.GetBlobLeaseClient() != null)
+            {
+                await image.DeleteAsync();
+            }
+        }
+
+
+
+    }
+}

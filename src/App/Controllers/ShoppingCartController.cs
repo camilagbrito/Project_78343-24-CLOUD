@@ -46,8 +46,11 @@ namespace App.Controllers
 
             if (existCarItem != null)
             {
-
-                existCarItem.Quantity++;
+                if(existCarItem.Quantity < 40)
+                {
+                    existCarItem.Quantity++;
+                  
+                }
             }
             else
             {
@@ -120,6 +123,7 @@ namespace App.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrder()
         {
             var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();

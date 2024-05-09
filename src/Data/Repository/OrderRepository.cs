@@ -32,6 +32,10 @@ namespace Data.Repository
             return await _context.Orders.AsNoTracking().Include(o => o.User).FirstOrDefaultAsync(o => o.Id == id);
         }
 
-
+      
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(string id)
+        {
+            return await _context.Orders.AsNoTracking().Where(o => o.UserId == id).ToListAsync();
+        }
     }
 }

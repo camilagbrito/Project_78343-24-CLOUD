@@ -13,5 +13,6 @@ namespace Business.Interfaces
 
         Task<Order> GetOrderandItems(Guid id);
         Task<Order> GetOrderUser(Guid id);
+        Task<IEnumerable<Order>> GetOrdersByUserId(string id);
     }
 }
