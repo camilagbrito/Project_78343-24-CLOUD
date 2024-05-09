@@ -1,4 +1,6 @@
 using App.Config;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Azure.Storage.Blobs;
 using Business.Interfaces;
 using Business.Models;
@@ -6,12 +8,13 @@ using Data.Context;
 using Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<EcomDbContext>(options =>
-options.UseSqlServer(connectionString));
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//builder.Services.AddDbContext<EcomDbContext>(options =>
+//options.UseSqlServer(connectionString));
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EcomDbContext>();
@@ -39,7 +42,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 /*if (builder.Environment.IsDevelopment())
-{
+{*/
     var keyVaultUrl = builder.Configuration.GetSection("KeyVault:KeyVaultURl");
     var keyVaultClientId = builder.Configuration.GetSection("KeyVault:ClientId");
     var keyVaultClientSecret = builder.Configuration.GetSection("KeyVault:ClientSecret");
@@ -52,8 +55,8 @@ builder.Services.AddAuthorization(options =>
     var client = new SecretClient(new Uri(keyVaultUrl.Value!.ToString()), credential);
 
     builder.Services.AddDbContext<EcomDbContext>(options =>
-    options.UseSqlServer(client.GetSecret("AzConnection").Value.Value.ToString()));
-}*/
+    options.UseSqlServer(client.GetSecret("connection").Value.Value.ToString()));
+/*}*/
 
 
 var app = builder.Build();
@@ -88,7 +91,7 @@ app.MapControllerRoute(
 app.UseGlobalizationConfig();
 app.UseSession();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
 
     var roleManager =
@@ -126,6 +129,6 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(user, "Admin");
     }
 
-}
+}*/
 
 app.Run();
