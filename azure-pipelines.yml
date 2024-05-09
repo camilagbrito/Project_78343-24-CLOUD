@@ -10,12 +10,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'DockerHub'
+      repository: 'camilagbrito'
+      command: 'buildAndPush'
+      Dockerfile: '**/Dockerfile'
+      buildContext: '.'
+      tags:
+        $(Build.BuildId)
+        latest
