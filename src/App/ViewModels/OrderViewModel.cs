@@ -13,6 +13,7 @@ namespace App.ViewModels
         public DateTime Date { get; set; }
 
         [DisplayName("Total do Pedido")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Total { get; set; }
         [DisplayName("Estado do Pedido")]
         public OrderStatus Status { get; set; }

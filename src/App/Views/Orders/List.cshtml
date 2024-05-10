@@ -6,6 +6,11 @@
 
 <h1>@ViewData["Title"]</h1>
 
+@if (TempData["Sucess"] != null)
+{
+    <p class="alert alert-success"> @TempData["Sucess"]</p>
+}
+
 <table class="table table-hover">
     <thead class="table-dark">
         <tr>

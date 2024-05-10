@@ -1,10 +1,12 @@
-﻿using App.ViewModels;
+﻿using App.Config;
+using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace App.Controllers
@@ -22,7 +24,7 @@ namespace App.Controllers
 
         public OrdersController(IOrderRepository orderRepository, IOrderItemRepository orderItemRepository, IAddressRepository addressRepository, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
-            
+
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _addressRepository = addressRepository;
@@ -30,7 +32,7 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
-  
+
         [Route("orders-list")]
         public async Task<IActionResult> List()
         {
@@ -38,7 +40,7 @@ namespace App.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;         
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var orders = await _orderRepository.GetOrdersByUserId(userId);
 
                 foreach (var order in orders)
@@ -81,8 +83,52 @@ namespace App.Controllers
             }
             else
             {
-                  return RedirectToAction("Home", "Index");
+                return RedirectToAction("Home", "Index");
             }
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrder()
+        {
+            var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
+
+            if (cartItemsSession.IsNullOrEmpty())
+            {
+                TempData["Message"] = "Seu carrinho está vazio.";
+                return RedirectToAction("ViewCart", "ShoppingCart");
+            }
+
+            var orderViewModel = new OrderViewModel();
+
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            orderViewModel.Date = DateTime.Now;
+            orderViewModel.UserId = user.Id;
+            orderViewModel.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+
+            await _orderRepository.Add(_mapper.Map<Order>(orderViewModel));
+
+            foreach (var item in cartItemsSession)
+            {
+                var orderItemViewModel = new OrderItemViewModel
+                {
+                    ProductId = item.Product.Id,
+                    Price = item.Product.Price,
+                    Quantity = item.Quantity,
+                    OrderId = orderViewModel.Id
+                };
+                await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
+            }
+
+            HttpContext.Session.Set("Cart", new List<ShoppingCartViewModel>());
+
+            TempData["Sucess"] = "Compra efetuada com sucesso!";
+
+            return RedirectToAction(nameof(List));
 
         }
         private async Task<OrderViewModel> GetOrder(Guid id)

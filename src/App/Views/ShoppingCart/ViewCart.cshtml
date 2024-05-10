@@ -2,9 +2,20 @@
 
 <h1>Carrinho de Compras</h1>
 
-    @ViewData["Data"]
+@if (TempData["MaxItems"] != null)
+{
 
-<h5 class="text-danger">Limite de 40 itens por produto. Para compras maiores contacte por telefone. </h5>
+    <p class="alert alert-warning">@TempData["MaxItems"]</p>
+
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning">
+        <p>@TempData["Message"]</p>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -16,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model.Items)
+        @foreach (var item in Model.Items)
         {
             <tr>
                 <td>@item.Product.Name</td>
@@ -25,12 +36,12 @@
                     @item.Quantity
                     <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Product.Id">+</a>
                 </td>
-             
-                <td>@item.Product.Price</td>
+
+                <td>@((item.Product.Price).ToString("C"))</td>
                 <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
                 <input type="hidden" value="@item.Product.Id" />
                 <td>
-                    <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Product.Id"><span class="fa fa-trash" ></span></a>
+                    <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Product.Id"><span class="fa fa-trash"></span></a>
                 </td>
             </tr>
         }
@@ -38,14 +49,14 @@
             <td></td>
             <td></td>
             <td></td>
-            <td>Total:</td>
-            <td>@Model.TotalPrice.ToString("C")</td>
+            <td><b>Total:</b></td>
+            <td><b>@Model.TotalPrice.ToString("C")</b></td>
             <td></td>
         </tr>
     </tbody>
 </table>
 <form asp-action="CreateOrder">
-    <input type="submit" value="Finalizar Pedido" class="btn btn-primary" asp-controller="ShoppingCart" asp-action="CreateOrder" />
+    <input type="submit" value="Finalizar Pedido" class="btn btn-primary" asp-controller="Orders" asp-action="CreateOrder" />
     <a class="btn btn-info" asp-controller="Products" asp-action="List">Continuar Comprando</a>
 </form>
 

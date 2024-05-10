@@ -58,7 +58,7 @@ namespace App.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("/Home/Index");
 
-            if (returnUrl == "/ShoppingCart/CreateOrder")
+            if (returnUrl == "/orders")
             {
                 returnUrl = "/ShoppingCart/ViewCart";
             }
@@ -74,7 +74,7 @@ namespace App.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("/Home/Index");
 
-            if(returnUrl == "/ShoppingCart/CreateOrder")
+            if(returnUrl == "/orders")
             {
                 returnUrl = "/ShoppingCart/ViewCart";
             }
