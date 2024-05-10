@@ -21,6 +21,7 @@ namespace App.ViewModels
 
         [Required(ErrorMessage = "Campo requerido")]
         [DisplayName("Preço")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Column(TypeName = "decimal(10,2)")]
         [Range(0.3, 5000.0)]
         public decimal Price { get; set; }

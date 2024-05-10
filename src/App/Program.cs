@@ -12,9 +12,7 @@ using Microsoft.Extensions.Configuration.AzureKeyVault;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<EcomDbContext>(options =>
-//options.UseSqlServer(connectionString));
+
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EcomDbContext>();
@@ -41,8 +39,6 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-/*if (builder.Environment.IsDevelopment())
-{*/
     var keyVaultUrl = builder.Configuration.GetSection("KeyVault:KeyVaultURl");
     var keyVaultClientId = builder.Configuration.GetSection("KeyVault:ClientId");
     var keyVaultClientSecret = builder.Configuration.GetSection("KeyVault:ClientSecret");
@@ -56,8 +52,6 @@ builder.Services.AddAuthorization(options =>
 
     builder.Services.AddDbContext<EcomDbContext>(options =>
     options.UseSqlServer(client.GetSecret("connection").Value.Value.ToString()));
-/*}*/
-
 
 var app = builder.Build();
 
@@ -90,45 +84,5 @@ app.MapControllerRoute(
 
 app.UseGlobalizationConfig();
 app.UseSession();
-
-/*using (var scope = app.Services.CreateScope())
-{
-
-    var roleManager =
-        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    var roles = new[] { "Admin", "Member" };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole(role));
-    }
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var userManager =
-        scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-    string email = "admin@localhost.com";
-    string password = "Admin123*";
-
-    if (await userManager.FindByEmailAsync(email) == null)
-    {
-        var user = new ApplicationUser();
-        user.UserName = "admin@localhost.com";
-        user.Email = "admin@localhost.com";
-        user.NormalizedUserName = "ADMIN@LOCALHOST.COM";
-        user.NormalizedEmail = "ADMIN@LOCALHOST.COM";
-        user.LockoutEnabled = false;
-        user.SecurityStamp = Guid.NewGuid().ToString();
-
-        await userManager.CreateAsync(user, password);
-
-        await userManager.AddToRoleAsync(user, "Admin");
-    }
-
-}*/
 
 app.Run();

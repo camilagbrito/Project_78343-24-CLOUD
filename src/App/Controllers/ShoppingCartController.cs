@@ -51,6 +51,11 @@ namespace App.Controllers
                     existCarItem.Quantity++;
                   
                 }
+                else
+                {
+                    TempData["MaxItems"] = "Máximo de 40 items por produto! Para compras maiores, contactar por telefone.";
+                    return RedirectToAction(nameof(ViewCart));
+                }
             }
             else
             {
@@ -119,42 +124,6 @@ namespace App.Controllers
             HttpContext.Session.Set("Cart", cartItemsSession);
 
             return RedirectToAction(nameof(ViewCart));
-        }
-
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrder()
-        {
-            var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
-
-            var orderViewModel = new OrderViewModel(); 
-
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
-
-            orderViewModel.Date = DateTime.Now;
-            orderViewModel.UserId = user.Id;
-            orderViewModel.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
-
-            await _orderRepository.Add(_mapper.Map<Order>(orderViewModel));
-   
-            foreach (var item in cartItemsSession)
-            {
-                var orderItemViewModel = new OrderItemViewModel
-                {
-                    ProductId = item.Product.Id,
-                    Price = item.Product.Price,
-                    Quantity = item.Quantity,
-                    OrderId = orderViewModel.Id
-                };
-                await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
-            }
-
-            HttpContext.Session.Set("Cart", new List<ShoppingCartViewModel>());
-
-            return RedirectToAction(nameof(ViewCart));
-
         }
 
     }
