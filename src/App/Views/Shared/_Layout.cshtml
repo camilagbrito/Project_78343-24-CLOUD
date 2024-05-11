@@ -19,28 +19,28 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>     
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="List">Produtos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="List">Meus Pedidos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="List">Comunidade</a>
-                        </li>
-                    </ul>
                     @if (!User.IsInRole("Admin"))
                     {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="List">Produtos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="List">Meus Pedidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="List">Comunidade</a>
+                            </li>
+                        </ul>
                         <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="ViewCart"><span class="fa fa-cart-shopping"></span></a>
                     }
-                   
+
                     @if (User.IsInRole("Admin"))
                     {
-                       <a class="btn btn-primary" asp-area="Admin" asp-controller="Admin" asp-action="Index">Area Administrativa</a>
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="Admin" asp-action="Index">Area Administrativa</a>
                     }
 
                     <partial name="_LoginPartial" />
