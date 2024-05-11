@@ -57,18 +57,10 @@ namespace App.Controllers
                 return View(postViewModel);
             }
 
-            if (!ModelState.IsValid)
-            {
-                return View(postViewModel);
-            }
-
             var imgPrefix = Guid.NewGuid() + "_";
 
-            if (!await UploadFileStorage(postViewModel.ImageUpload, imgPrefix))
-            {
-                return View(postViewModel);
-            }
-
+            await UploadFileStorage(postViewModel.ImageUpload, imgPrefix);
+           
             if (postViewModel.ImageUpload != null)
             {
                 postViewModel.Image = url + imgPrefix + postViewModel.ImageUpload.FileName;
@@ -86,7 +78,7 @@ namespace App.Controllers
         }
 
         [Route("delete-post/{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult>Delete(Guid id)
         {
             var post =  _mapper.Map<PostViewModel>(await _postRepository.GetbyId(id)); 
 
@@ -121,7 +113,7 @@ namespace App.Controllers
 
         private async Task<bool> UploadFileStorage(IFormFile file, string imgPrefix)
         {
-            if (file.Length <= 0 || file == null) return false;
+            if (file == null) return false;
 
             var name = imgPrefix + file.FileName;
 
