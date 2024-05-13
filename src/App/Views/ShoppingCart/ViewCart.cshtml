@@ -4,9 +4,9 @@
 
 @if (TempData["MaxItems"] != null)
 {
-
-    <p class="alert alert-warning">@TempData["MaxItems"]</p>
-
+    <div class="alert alert-warning">
+        <p class="alert alert-warning">@TempData["MaxItems"]</p>
+    </div>
 }
 
 @if (TempData["Message"] != null)

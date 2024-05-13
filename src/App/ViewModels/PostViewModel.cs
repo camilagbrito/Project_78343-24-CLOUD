@@ -20,11 +20,12 @@ namespace App.ViewModels
         public string Content { get; set; }
 
         [DisplayName("Data de Criação")]
-        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
 
+        [DisplayName("Imagem")]
         public string Image { get; set; }
 
+        [DisplayName("Imagem")]
         public IFormFile ImageUpload { get; set; }
     
         [DisplayName("Utilizador")]

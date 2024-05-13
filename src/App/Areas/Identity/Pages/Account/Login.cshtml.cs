@@ -42,11 +42,11 @@ namespace App.Areas.Identity.Pages.Account
         public class InputModel
         {
            
-            [Required]
+            [Required(ErrorMessage ="Campo requerido")]
             [EmailAddress]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Campo requerido")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -77,6 +77,10 @@ namespace App.Areas.Identity.Pages.Account
             if(returnUrl == "/orders")
             {
                 returnUrl = "/ShoppingCart/ViewCart";
+            }
+            if(returnUrl == "/posts/add-comment")
+            {
+                returnUrl = "/posts/posts-list";
             }
 
 

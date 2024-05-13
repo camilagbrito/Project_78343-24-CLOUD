@@ -19,7 +19,7 @@ namespace Data.Repository
 
         public async Task<IEnumerable<Order>> GetOrdersAndUsers()
         {
-            return await _context.Orders.AsNoTracking().Include(o => o.User).ThenInclude(u => u.Addresses).ToListAsync();
+            return await _context.Orders.AsNoTracking().Include(o => o.User).ThenInclude(u => u.Addresses).OrderByDescending(o => o.Date).ToListAsync();
         }
 
         public async Task<Order> GetOrderandItems(Guid id)
@@ -35,7 +35,7 @@ namespace Data.Repository
       
         public async Task<IEnumerable<Order>> GetOrdersByUserId(string id)
         {
-            return await _context.Orders.AsNoTracking().Where(o => o.UserId == id).ToListAsync();
+            return await _context.Orders.AsNoTracking().Where(o => o.UserId == id).OrderByDescending(o => o.Date).ToListAsync();
         }
     }
 }

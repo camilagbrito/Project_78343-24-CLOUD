@@ -1,0 +1,59 @@
+﻿@model App.ViewModels.PostViewModel
+
+@{
+    ViewData["Title"] = "Editar - " + Model.Title;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <form enctype="multipart/form-data" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea cols="40" rows="5" asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label> Imagem Atual</label><br />
+                <img src="@Model.Image" alt="@Model.Image" style="width: 70px; height: 100px" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUpload" class="control-label">Nova Imagem</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="ImageUpload" asp-for="ImageUpload" />
+                    <label style="display: none" id="img_name"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a class="btn btn-info" asp-action="Index">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $("#ImageUpload").change(function () {
+            $("img_name").text(this.files[0].name);
+            $("img_name")[].style.display = 'block';
+        });
+
+    </script>
+
+}
