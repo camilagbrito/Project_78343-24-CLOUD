@@ -26,6 +26,7 @@ namespace App.ViewModels
         [Range(0.3, 5000.0)]
         public decimal Price { get; set; }
 
+        [DisplayName("Imagem do Produto")]
         public string Image { get; set; }
 
         [DisplayName("Imagem do Produto")]

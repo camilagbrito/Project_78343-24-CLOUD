@@ -15,7 +15,6 @@ namespace App.ViewModels
         public string Message { get; set; }
 
         [DisplayName("Data de Criação")]
-        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
 
         public Guid PostId { get; set; }
@@ -24,6 +23,7 @@ namespace App.ViewModels
 
         [DisplayName("Utilizador")]
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        [DisplayName("Utilizador")]
+        public ApplicationUserViewModel User { get; set; }
     }
 }

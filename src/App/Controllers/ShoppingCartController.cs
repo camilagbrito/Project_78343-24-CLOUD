@@ -67,7 +67,6 @@ namespace App.Controllers
             }
 
             HttpContext.Session.Set("Cart", cartItemsSession);
-
             return RedirectToAction(nameof(ViewCart));
         }
 

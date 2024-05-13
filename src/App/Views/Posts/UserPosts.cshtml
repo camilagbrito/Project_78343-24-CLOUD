@@ -1,0 +1,56 @@
+﻿@model IEnumerable<App.ViewModels.PostViewModel>
+
+@{
+    ViewData["Title"] = "Meus Posts";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Image" alt="@item.Image" style="width:80px; height:100px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <div>
+                        <a class="btn btn-primary" asp-controller="Comments" asp-action="PostComments" asp-route-id="@item.Id">Ver Comentários</a>
+                    </div>
+                    <div>
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil"></a>
+                        <a class="btn btn-danger" asp-area="" asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></a>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
