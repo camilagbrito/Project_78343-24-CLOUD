@@ -57,6 +57,10 @@
                                     <a class="btn btn-danger" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><spam class="fa fa-trash"></a>
                                     <a class="btn btn-warning" asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id"><spam class="fa fa-pencil"></a>
                                 }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-danger" asp-area="Admin" asp-controller="AdminComments" asp-action="Delete" asp-route-id="@comment.Id"><spam class="fa fa-trash"></a>
+                                }
                             </td>
                         </tr>
                     }
