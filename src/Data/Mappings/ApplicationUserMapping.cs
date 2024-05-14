@@ -34,6 +34,10 @@ namespace Data.Mappings
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId);
 
+            builder.HasMany(u => u.Coupons)
+               .WithOne(c => c.User)
+               .HasForeignKey(c => c.UserId);
+
         }
     }
 }
