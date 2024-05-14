@@ -51,5 +51,9 @@
 </div>
 <div>
     <a class="btn btn-warning" href="javascript:window.history.back();">Voltar</a>
-    <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id">Adicionar as Carrinho</a>
+    @if (!User.IsInRole("Admin"))
+    {
+        <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id">Adicionar as Carrinho</a>
+    }
+   
 </div>
