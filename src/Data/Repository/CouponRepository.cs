@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Business.Models;
 using Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace Data.Repository
     {
         public CouponRepository(EcomDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Coupon>> GetCouponsByUserId(string id)
+        {
+            return await _context.Coupons.AsNoTracking().Where(c => c.UserId == id).OrderByDescending(c => c.CreatedDate).ToListAsync();
         }
     }
 }

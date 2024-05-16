@@ -191,27 +191,6 @@ namespace App.Areas.Admin.Controllers
             product.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(await _categoryRepository.GetAll());
             return product;
         }
-        //return list of categories
-
-        /*private async Task<bool> UploadFile(IFormFile file, string imgPrefix)
-        {
-            if (file.Length <= 0 || file == null) return false;
-
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgPrefix + file.FileName);
-
-            if (System.IO.File.Exists(path))
-            {
-                ModelState.AddModelError(string.Empty, "Já existe um ficheiro com este nome");
-                return false;
-            }
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            return true;
-
-        }*/
 
         private async Task<bool> UploadFileStorage(IFormFile file, string imgPrefix)
         {
@@ -253,17 +232,6 @@ namespace App.Areas.Admin.Controllers
                 await image.DeleteAsync();
             }
         }
-
-        /*private static void DeleteFile(string file)
-        {
-
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", file);
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-        }*/
 
     }
 

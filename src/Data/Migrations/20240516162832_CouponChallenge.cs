@@ -6,18 +6,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ChallengeAndCoupons : Migration
+    public partial class CouponChallenge : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<Guid>(
+                name: "CouponId",
+                table: "Orders",
+                type: "uniqueidentifier",
+                nullable: true);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "Discount",
+                table: "Orders",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m);
+
             migrationBuilder.CreateTable(
                 name: "Challenges",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Image = table.Column<string>(type: "varchar(500)", nullable: true),
-                    RightAnswer = table.Column<string>(type: "varchar(200)", nullable: false)
+                    RightAnswer = table.Column<string>(type: "varchar(200)", nullable: false),
+                    Tip = table.Column<string>(type: "varchar(200)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,8 +47,11 @@ namespace Data.Migrations
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Discount = table.Column<int>(type: "int", nullable: false),
+                    Expired = table.Column<bool>(type: "bit", nullable: false),
+                    Used = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssociatedOrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,6 +69,13 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_CouponId",
+                table: "Orders",
+                column: "CouponId",
+                unique: true,
+                filter: "[CouponId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Coupons_ChallengeId",
                 table: "Coupons",
                 column: "ChallengeId");
@@ -59,16 +84,39 @@ namespace Data.Migrations
                 name: "IX_Coupons_UserId",
                 table: "Coupons",
                 column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Orders_Coupons_CouponId",
+                table: "Orders",
+                column: "CouponId",
+                principalTable: "Coupons",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Orders_Coupons_CouponId",
+                table: "Orders");
+
             migrationBuilder.DropTable(
                 name: "Coupons");
 
             migrationBuilder.DropTable(
                 name: "Challenges");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Orders_CouponId",
+                table: "Orders");
+
+            migrationBuilder.DropColumn(
+                name: "CouponId",
+                table: "Orders");
+
+            migrationBuilder.DropColumn(
+                name: "Discount",
+                table: "Orders");
         }
     }
 }

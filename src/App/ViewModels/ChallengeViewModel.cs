@@ -10,8 +10,16 @@ namespace App.ViewModels
         public Guid Id { get; set; }
         [DisplayName("Imagem Atual")]
         public string Image { get; set; }
+
         [DisplayName("Imagem")]
         public IFormFile ImageUpload { get; set; }
+
+        [DisplayName("Resposta")]
+        public string UserAnswer { get; set; }
+
+        [DisplayName("Dica")]
+        public string Tip { get; set; }
+
         [DisplayName("Resposta Certa")]
         public string RightAnswer { get; set; }
         public ICollection<CouponViewModel> Coupons { get; set; }

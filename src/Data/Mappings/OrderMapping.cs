@@ -18,6 +18,11 @@ namespace Data.Mappings
             builder.HasMany(o=> o.Items)
                    .WithOne(i => i.Order);
 
+            builder.HasOne(o => o.Coupon)
+              .WithOne(c => c.AssociatedOrder)
+              .HasForeignKey<Order>(o => o.CouponId)
+              .IsRequired(false);
+
             builder.ToTable("Orders");
         }
     }

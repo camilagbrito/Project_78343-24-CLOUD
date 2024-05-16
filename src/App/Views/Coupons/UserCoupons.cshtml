@@ -1,0 +1,64 @@
+﻿@model IEnumerable<App.ViewModels.CouponViewModel>
+
+@{
+    ViewData["Title"] = "Histórico de Coupons";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpirationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Used)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Expired)
+            </th> 
+            <th>
+                @Html.DisplayNameFor(model => model.AssociatedOrder)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpirationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Used)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expired)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssociatedOrder.Id)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a class="btn btn-info" href="javascript:window.history.back();">Voltar</a>

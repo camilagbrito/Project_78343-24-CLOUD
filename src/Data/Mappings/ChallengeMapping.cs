@@ -14,6 +14,10 @@ namespace Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(200)");
 
+            builder.Property(p => p.Tip)
+                .IsRequired()
+                .HasColumnType("varchar(200)");
+
             builder.Property(p => p.Image)
                 .HasColumnType("varchar(500)");
 

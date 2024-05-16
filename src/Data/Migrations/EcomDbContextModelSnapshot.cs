@@ -83,10 +83,17 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Image")
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("RightAnswer")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Tip")
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
@@ -129,6 +136,9 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AssociatedOrderId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ChallengeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -140,6 +150,12 @@ namespace Data.Migrations
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Expired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -159,8 +175,14 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CouponId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -172,6 +194,10 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CouponId")
+                        .IsUnique()
+                        .HasFilter("[CouponId] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -541,9 +567,15 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Business.Models.Order", b =>
                 {
+                    b.HasOne("Business.Models.Coupon", "Coupon")
+                        .WithOne("AssociatedOrder")
+                        .HasForeignKey("Business.Models.Order", "CouponId");
+
                     b.HasOne("Business.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Coupon");
 
                     b.Navigation("User");
                 });
@@ -643,6 +675,11 @@ namespace Data.Migrations
             modelBuilder.Entity("Business.Models.Challenge", b =>
                 {
                     b.Navigation("Coupons");
+                });
+
+            modelBuilder.Entity("Business.Models.Coupon", b =>
+                {
+                    b.Navigation("AssociatedOrder");
                 });
 
             modelBuilder.Entity("Business.Models.Order", b =>
