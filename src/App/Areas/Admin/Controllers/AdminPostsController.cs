@@ -31,7 +31,7 @@ namespace App.Areas.Admin.Controllers
             _blobConnectionString = configuration.GetConnectionString("BlobConnectionString");
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> List()
         {
             return View(_mapper.Map<IEnumerable<PostViewModel>>(await _postRepository.GetPostsUsersAndComments()));
         }
@@ -69,7 +69,7 @@ namespace App.Areas.Admin.Controllers
 
             await _postRepository.Delete(id);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
 

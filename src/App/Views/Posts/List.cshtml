@@ -9,8 +9,10 @@
     ViewData["Title"] = "Posts";
 }
 
+<div>
 <h1>Bem-Vindo à Comunidade do Site</h1>
 <h3>Fique à vontade para compartilhar suas dúvidas e dicas!</h3>
+</div>
 
 <a class="btn btn-primary" asp-controller="Posts" asp-action="Create">Criar Post</a>
 
@@ -57,7 +59,7 @@
                                     <a class="btn btn-danger" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><spam class="fa fa-trash"></a>
                                     <a class="btn btn-warning" asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id"><spam class="fa fa-pencil"></a>
                                 }
-                                @if (User.IsInRole("Admin"))
+                                @if (User.IsInRole("Admin") && UserManager.GetUserName(User) != comment.User.Email)
                                 {
                                     <a class="btn btn-danger" asp-area="Admin" asp-controller="AdminComments" asp-action="Delete" asp-route-id="@comment.Id"><spam class="fa fa-trash"></a>
                                 }

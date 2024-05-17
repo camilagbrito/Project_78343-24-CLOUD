@@ -17,6 +17,7 @@ namespace App.ViewModels
         [StringLength(50, ErrorMessage = "Máximo 50 caracteres")]
         public string LastName { get; set; }
 
+        [DisplayName("Nome")]
         public string FullName => $"{FirstName} {LastName}";
 
         [Required(ErrorMessage = "Campo requerido")]

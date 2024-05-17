@@ -1,0 +1,101 @@
+﻿@using Business.Models
+@using Microsoft.AspNetCore.Identity
+@model App.ViewModels.ChallengeViewModel
+
+@{
+    ViewData["Title"] = "Desafio do Dia";
+}
+
+<div class="text-center">
+    <h1 class="align-content-center">@ViewData["Title"]</h1>
+    <h4 class="align-content-center">Adivinhe o nome da planta e ganhe um cupão de 10% de desconto.</h4>
+</div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Message"]
+    </div>
+}
+
+else if (TempData["ActivedCoupon"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["ActivedCoupon"]
+    </div>
+}
+else if (TempData["AlreadyParticipated"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["AlreadyParticipated"]
+    </div>
+}
+
+else
+{
+    <div class="text-center">
+        <form asp-action="VerifyAnswer" method="post">
+            <div class="form-group">
+                <img src="@Model.Image" alt="@Model.Image" style="width: 400px;" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAnswer"><b>Resposta</b></label>
+                <input asp-for="UserAnswer" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="RightAnswer" class="form-control" value="@Model.RightAnswer" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="Id" class="form-control" value="@Model.Id" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="Image" class="form-control" value="@Model.Image" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="Tip" class="form-control" value="@Model.Tip" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="Date" class="form-control" value="@Model.Date" />
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Enviar Resposta</button>
+        </form>
+
+        <button id="tipButton" class="btn btn-primary mt-3" onclick="showTip()">Mostrar Dica</button>
+        <p id="tipText" class="bg-info text-white p-3 mt-3" style="display: none;">@Model.Tip</p>
+        <div>
+            @if (TempData["WrongAnswer"] != null)
+            {
+                <div class="alert alert-warning">
+                    @TempData["WrongAnswer"]
+                </div>
+            }
+
+            @if (Model.Coupons != null && Model.Coupons.Any())
+            {
+                <div class="alert alert-success mt-4">
+                    <h4 class="alert-heading">Parabéns!</h4>
+                    <p>Você ganhou o seguinte cupão:</p>
+                    <ul class="list-unstyled">
+                        @foreach (var coupon in Model.Coupons)
+                        {
+                            <li>
+                                <strong>Código:</strong> @coupon.Id <br />
+                                <strong>Desconto:</strong> @coupon.Discount%
+                                <strong>Valido até:</strong>@coupon.ExpirationDate
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function showTip() {
+            document.getElementById('tipButton').style.display = 'none';
+            document.getElementById('tipText').style.display = 'block';
+        }
+    </script>
+}

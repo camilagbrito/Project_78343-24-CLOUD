@@ -13,6 +13,7 @@ namespace Business.Models
         public IEnumerable<Order> Orders { get; set; } = new List<Order>();
         public IEnumerable<Post> Posts { get; set; } = new List<Post>();
         public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
+        public IEnumerable<Coupon> Coupons { get; set; } = new List<Coupon>();
     }
 }
 

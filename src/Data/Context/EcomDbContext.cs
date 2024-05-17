@@ -21,6 +21,10 @@ namespace Data.Context
         public DbSet<Address> Address { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Challenge> Challenges { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+
+
 
 
 

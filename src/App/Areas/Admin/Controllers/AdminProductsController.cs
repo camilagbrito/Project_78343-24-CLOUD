@@ -35,7 +35,7 @@ namespace App.Areas.Admin.Controllers
         }
 
         [Route("products-list")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> List()
         {
             return View(_mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository.GetProductsandCategory()));
         }
@@ -74,10 +74,7 @@ namespace App.Areas.Admin.Controllers
 
             var imgPrefix = Guid.NewGuid() + "_";
 
-            if (!await UploadFileStorage(productViewModel.ImageUpload, imgPrefix))
-            {
-                return View(productViewModel);
-            }
+            await UploadFileStorage(productViewModel.ImageUpload, imgPrefix);
 
             if (productViewModel.ImageUpload != null)
             {
@@ -86,7 +83,7 @@ namespace App.Areas.Admin.Controllers
 
             await _productRepository.Add(_mapper.Map<Product>(productViewModel));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         [Route("edit-product/{id:guid}")]
@@ -136,7 +133,7 @@ namespace App.Areas.Admin.Controllers
 
                 if (productViewModel.Image != null)
                 {
-                    DeleteFileStorage(productViewModel.Image);
+                    await DeleteFileStorage(productViewModel.Image);
                 }
 
                 productViewModel.Image = url + imgPrefix + productViewModel.ImageUpload.FileName;
@@ -144,7 +141,7 @@ namespace App.Areas.Admin.Controllers
 
             await _productRepository.Update(_mapper.Map<Product>(productViewModel));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         [Route("delete-product/{id:guid}")]
@@ -172,11 +169,11 @@ namespace App.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            DeleteFileStorage(product.Image);
+            await DeleteFileStorage(product.Image);
 
             await _productRepository.Delete(id);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         private async Task<ProductViewModel> GetProduct(Guid id)
@@ -191,31 +188,10 @@ namespace App.Areas.Admin.Controllers
             product.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(await _categoryRepository.GetAll());
             return product;
         }
-        //return list of categories
-
-        /*private async Task<bool> UploadFile(IFormFile file, string imgPrefix)
-        {
-            if (file.Length <= 0 || file == null) return false;
-
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgPrefix + file.FileName);
-
-            if (System.IO.File.Exists(path))
-            {
-                ModelState.AddModelError(string.Empty, "Já existe um ficheiro com este nome");
-                return false;
-            }
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            return true;
-
-        }*/
 
         private async Task<bool> UploadFileStorage(IFormFile file, string imgPrefix)
         {
-            if (file.Length <= 0 || file == null) return false;
+            if (file == null) return false;
 
             var name = imgPrefix + file.FileName;
 
@@ -236,11 +212,12 @@ namespace App.Areas.Admin.Controllers
             return true;
 
         }
-        private async void DeleteFileStorage(string file)
+        private async Task<bool> DeleteFileStorage(string file)
         {
             BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
             BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
 
+            if (file == null) return false;
 
             string[] path = file.Split("/");
 
@@ -252,18 +229,8 @@ namespace App.Areas.Admin.Controllers
             {
                 await image.DeleteAsync();
             }
+            return true;
         }
-
-        /*private static void DeleteFile(string file)
-        {
-
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", file);
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-        }*/
 
     }
 
