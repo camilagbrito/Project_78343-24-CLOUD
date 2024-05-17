@@ -8,19 +8,28 @@ namespace App.ViewModels
     {
         [Key]
         public Guid Id { get; set; }
+
         [DisplayName("Imagem Atual")]
         public string Image { get; set; }
 
         [DisplayName("Imagem")]
+        [Required(ErrorMessage = "Campo Requerido!")]
         public IFormFile ImageUpload { get; set; }
 
-        [DisplayName("Resposta")]
+        [DisplayName("Resposta")] 
         public string UserAnswer { get; set; }
 
+        [DisplayName("Data para publicar")]
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Campo Requerido!")]
+        public DateTime Date { get; set; }
+
         [DisplayName("Dica")]
+        [Required(ErrorMessage = "Campo Requerido!")]
         public string Tip { get; set; }
 
         [DisplayName("Resposta Certa")]
+        [Required(ErrorMessage = "Campo Requerido!")]
         public string RightAnswer { get; set; }
         public ICollection<CouponViewModel> Coupons { get; set; }
     }

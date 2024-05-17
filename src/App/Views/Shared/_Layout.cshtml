@@ -44,6 +44,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Challenges" asp-action="Index">Desafio do Dia</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Coupons" asp-action="UserCoupons">Meus Cupões</a>
+                        </li>
                     </ul>
                     @if (!User.IsInRole("Admin"))
                     {

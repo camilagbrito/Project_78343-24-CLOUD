@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(EcomDbContext))]
-    [Migration("20240516162832_CouponChallenge")]
+    [Migration("20240516205915_CouponChallenge")]
     partial class CouponChallenge
     {
         /// <inheritdoc />
@@ -86,7 +86,7 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Image")

@@ -23,7 +23,7 @@ namespace App.Areas.Admin.Controllers
         }
 
         [Route("categories-list")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> List()
         {
             return View(_mapper.Map<IEnumerable<CategoryViewModel>>(await _categoryRepository.GetAll()));
         }
@@ -47,7 +47,7 @@ namespace App.Areas.Admin.Controllers
             var category = _mapper.Map<Category>(categoryViewModel);
             await _categoryRepository.Add(category);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
 
 
         }
@@ -83,7 +83,7 @@ namespace App.Areas.Admin.Controllers
             var category = _mapper.Map<Category>(categoryViewModel);
             await _categoryRepository.Update(category);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         [Route("delete-category/{id:guid}")]
@@ -107,7 +107,7 @@ namespace App.Areas.Admin.Controllers
            
             await _categoryRepository.Delete(id);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
     }
 }

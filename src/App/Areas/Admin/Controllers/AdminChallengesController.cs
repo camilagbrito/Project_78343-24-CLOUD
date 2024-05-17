@@ -7,6 +7,11 @@ using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Azure.KeyVault.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Data.Repository;
+using System.Security.Claims;
 
 namespace App.Areas.Admin.Controllers
 {
@@ -28,6 +33,12 @@ namespace App.Areas.Admin.Controllers
             _blobConnectionString = configuration.GetConnectionString("BlobConnectionString");
         }
 
+        [Route("challenges")]
+        public async Task<IActionResult> List()
+        {
+           return View(_mapper.Map<IEnumerable<ChallengeViewModel>>(await _challengeRepository.GetAll()));
+        }
+
         [Route("new-challenge")]
         public IActionResult Create()
         {
@@ -39,6 +50,7 @@ namespace App.Areas.Admin.Controllers
         [Route("new-challenge")]
         public async Task<IActionResult> Create(ChallengeViewModel challengeViewModel)
         {
+            var allChallenges = _mapper.Map<IEnumerable<ChallengeViewModel>>(await  _challengeRepository.GetAll());
 
             if (!ModelState.IsValid)
             {
@@ -57,9 +69,17 @@ namespace App.Areas.Admin.Controllers
                 challengeViewModel.Image = url + imgPrefix + challengeViewModel.ImageUpload.FileName;
             }
 
+            foreach (var challenge in allChallenges)
+            {
+               if(challenge.Date == challengeViewModel.Date) 
+                {
+                    return View(challengeViewModel);
+                }
+            }
+
             await _challengeRepository.Add(_mapper.Map<Challenge>(challengeViewModel));
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         private async Task<bool> UploadFileStorage(IFormFile file, string imgPrefix)

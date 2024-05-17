@@ -32,7 +32,7 @@ namespace Data.Migrations
                     Image = table.Column<string>(type: "varchar(500)", nullable: true),
                     RightAnswer = table.Column<string>(type: "varchar(200)", nullable: false),
                     Tip = table.Column<string>(type: "varchar(200)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

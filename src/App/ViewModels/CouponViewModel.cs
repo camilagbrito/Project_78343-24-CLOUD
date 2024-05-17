@@ -11,9 +11,11 @@ namespace App.ViewModels
         public Guid Id { get; set; }
         [DisplayName("Data de Criação")]
         [DataType(DataType.Date)]
+
         public DateTime CreatedDate { get; set; }
         [DisplayName("Data de Expiração")]
         [DataType(DataType.Date)]
+
         public DateTime ExpirationDate { get; set; }
         [DisplayName("Percentagem Desconto")]
         public int Discount { get; set; }

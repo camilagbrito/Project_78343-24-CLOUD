@@ -18,7 +18,7 @@ namespace Data.Repository
 
         public async Task<Challenge> GetByDate()
         {
-            return await _context.Challenges.AsNoTracking().Where(x => x.CreatedDate.Date == DateTime.Now.Date).FirstOrDefaultAsync();
+            return await _context.Challenges.AsNoTracking().Where(x => x.Date.Date == DateTime.Now.Date).FirstOrDefaultAsync();
         }
 
     }
