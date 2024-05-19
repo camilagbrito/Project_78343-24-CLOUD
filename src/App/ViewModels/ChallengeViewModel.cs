@@ -19,6 +19,11 @@ namespace App.ViewModels
         [DisplayName("Resposta")] 
         public string UserAnswer { get; set; }
 
+        [DisplayName("Percentagem Desconto")]
+        [Range(0, 30, ErrorMessage = "Deve ser entre 0 e 30")]
+        public int DiscountPercent { get; set; }
+ 
+
         [DisplayName("Data para publicar")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Campo Requerido!")]

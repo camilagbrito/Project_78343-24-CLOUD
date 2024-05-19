@@ -15,19 +15,20 @@ namespace App.Controllers
 
         private readonly IOrderItemRepository _orderItemRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly ICouponRepository _couponRepository;
         private ICollection<OrderItemViewModel> cartItems = new List<OrderItemViewModel>();
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+       
        
 
-        public ShoppingCartController(UserManager<ApplicationUser> userManager, IOrderItemRepository orderItemRepository, IOrderRepository orderRepository, IProductRepository productRepository, IMapper mapper)
+        public ShoppingCartController(IOrderItemRepository orderItemRepository, IOrderRepository orderRepository, ICouponRepository couponRepository, IProductRepository productRepository, IMapper mapper)
         {
             _orderItemRepository = orderItemRepository;
             _orderRepository = orderRepository;
+            _couponRepository = couponRepository;
             _productRepository = productRepository;
             _mapper = mapper;
-            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -74,12 +75,14 @@ namespace App.Controllers
         {
            
             var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
-
             var cartViewModel = new ShoppingCartViewModel
             {
                 Items = cartItemsSession,
-                TotalPrice = cartItemsSession.Sum(item => item.Product.Price * item.Quantity)
+                TotalPrice = cartItemsSession.Sum(item => (item.Product.Price * item.Quantity))
             };
+
+            cartViewModel = AddCoupon(cartViewModel).Result;
+            cartViewModel.TotalPrice = cartViewModel.TotalPrice - (cartViewModel.TotalPrice * (cartViewModel.DiscountPercent / 100));
 
             return View(cartViewModel);
         }
@@ -123,6 +126,32 @@ namespace App.Controllers
             HttpContext.Session.Set("Cart", cartItemsSession);
 
             return RedirectToAction(nameof(ViewCart));
+        }
+
+        [Authorize]
+        public async Task<ShoppingCartViewModel> AddCoupon(ShoppingCartViewModel shoppingCartViewModel)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var coupons = _mapper.Map<IEnumerable<CouponViewModel>>( await _couponRepository.GetCouponsByUserId(userId));
+            var activeCoupons = new List<CouponViewModel>();
+
+            foreach (var c in coupons)
+            {
+                if(!c.Expired == true && !c.Used == true)
+                {
+                    activeCoupons.Add(c);
+                }
+            }
+
+            var coupon = activeCoupons.LastOrDefault();
+
+            if(coupon != null)
+            {
+                shoppingCartViewModel.Coupon = coupon;
+                shoppingCartViewModel.DiscountPercent = coupon.DiscountPercent;
+            }
+           
+            return shoppingCartViewModel;
         }
 
     }

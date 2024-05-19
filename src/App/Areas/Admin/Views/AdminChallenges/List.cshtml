@@ -25,6 +25,9 @@
                 @Html.DisplayNameFor(model => model.Tip)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.RightAnswer)
             </th>
             <th></th>
@@ -46,6 +49,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Tip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiscountPercent)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RightAnswer)

@@ -1,17 +1,13 @@
 ﻿@model IEnumerable<App.ViewModels.CouponViewModel>
 
 @{
-    ViewData["Title"] = "Histórico de Coupons";
+    ViewData["Title"] = "Histórico de Cupões";
+
+
 }
+
 
 <h1>@ViewData["Title"]</h1>
-
-@if (TempData["Empty"] != null)
-{
-    <div class="alert alert-info">
-        @TempData["Empty"]
-    </div>
-}
 
 
 <table class="table table-hover">
@@ -34,6 +30,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Expired)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
             </th>
         </tr>
     </thead>
@@ -59,8 +58,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Expired)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
             </tr>
         }
     </tbody>
 </table>
-

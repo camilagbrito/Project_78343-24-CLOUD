@@ -17,12 +17,12 @@ namespace Data.Migrations
                 type: "uniqueidentifier",
                 nullable: true);
 
-            migrationBuilder.AddColumn<decimal>(
-                name: "Discount",
+            migrationBuilder.AddColumn<int>(
+                name: "DiscountPercent",
                 table: "Orders",
-                type: "decimal(18,2)",
+                type: "int",
                 nullable: false,
-                defaultValue: 0m);
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "Challenges",
@@ -31,6 +31,7 @@ namespace Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Image = table.Column<string>(type: "varchar(500)", nullable: true),
                     RightAnswer = table.Column<string>(type: "varchar(200)", nullable: false),
+                    DiscountPercent = table.Column<int>(type: "int", nullable: false),
                     Tip = table.Column<string>(type: "varchar(200)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -46,12 +47,11 @@ namespace Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discount = table.Column<int>(type: "int", nullable: false),
+                    DiscountPercent = table.Column<int>(type: "int", nullable: false),
                     Expired = table.Column<bool>(type: "bit", nullable: false),
                     Used = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssociatedOrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,7 +115,7 @@ namespace Data.Migrations
                 table: "Orders");
 
             migrationBuilder.DropColumn(
-                name: "Discount",
+                name: "DiscountPercent",
                 table: "Orders");
         }
     }

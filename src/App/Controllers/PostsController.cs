@@ -4,15 +4,12 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
 using Business.Interfaces;
 using Business.Models;
-using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Security.Policy;
 using Azure.Storage.Blobs.Specialized;
-using Data.Migrations;
-using System.Drawing;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.Controllers
 {
@@ -70,6 +67,12 @@ namespace App.Controllers
 
                     postsViewModel.Add(postViewModel);
                 }
+
+                if (postsViewModel.IsNullOrEmpty())
+                {
+                    TempData["Empty"] = "Ainda não possui posts.";
+                }
+
                 return View(postsViewModel);
             }
             else

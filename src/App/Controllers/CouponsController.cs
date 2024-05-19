@@ -6,6 +6,7 @@ using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
@@ -18,13 +19,12 @@ namespace App.Controllers
 
         private readonly ICouponRepository _couponRepository;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CouponsController(ICouponRepository couponRepository, IMapper mapper, UserManager<ApplicationUser> userManager)
+
+        public CouponsController(ICouponRepository couponRepository, IMapper mapper)
         {
             _couponRepository = couponRepository;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         [Route("my-coupons")]
@@ -32,37 +32,30 @@ namespace App.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+
                 var couponsViewModel = new List<CouponViewModel>();
 
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var coupons = await _couponRepository.GetCouponsByUserId(userId);
+                var coupons = _mapper.Map<IEnumerable<CouponViewModel>>(await _couponRepository.GetCouponsByUserId(userId));
 
                 foreach (var coupon in coupons)
                 {
-                    var couponViewModel = new CouponViewModel
-                    {
-                        Id = coupon.Id,
-                        User = _mapper.Map<ApplicationUserViewModel>(coupon.User),
-                        UserId = userId,
-                        Discount = coupon.Discount,
-                        CreatedDate = coupon.CreatedDate,
-                        ExpirationDate = coupon.ExpirationDate,
-                        Expired = coupon.Expired,
-                        Used = coupon.Used,
-                        ChallengeId = coupon.ChallengeId,
-                        AssociatedOrderId = coupon.AssociatedOrderId
+                    
+                    var couponViewModel = ValidateExpiration(coupon);
 
-                    };
-
-                    couponViewModel = ValidateUse(couponViewModel);
-
-                    if(coupon.Expired == true || coupon.Used == true)
+                    if(couponViewModel.Expired == true)
                     {
                         await _couponRepository.Update(_mapper.Map<Coupon>(couponViewModel));
                     }
                     
                     couponsViewModel.Add(couponViewModel);
                 }
+
+                if (couponsViewModel.IsNullOrEmpty())
+                {
+                    TempData["Empty"] = "Ainda não possui cupões.";  
+                }
+
                 return View(couponsViewModel);
             }
             else
@@ -70,19 +63,6 @@ namespace App.Controllers
                 return RedirectToAction("Home", "Index");
             }
 
-        }
-
-        private CouponViewModel ValidateUse(CouponViewModel coupon)
-        {
-            if (coupon.AssociatedOrderId.ToString() != "00000000-0000-0000-0000-000000000000") 
-            { 
-                coupon.Used = true; 
-            }
-            else
-            {
-                ValidateExpiration(coupon);  
-            }
-            return coupon;
         }
 
         private CouponViewModel ValidateExpiration(CouponViewModel coupon)
