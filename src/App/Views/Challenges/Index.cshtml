@@ -8,7 +8,10 @@
 
 <div class="text-center">
     <h1 class="align-content-center">@ViewData["Title"]</h1>
-    <h4 class="align-content-center">Adivinhe o nome da planta e ganhe um cupão de 10% de desconto.</h4>
+    @if(Model != null)
+    {
+        <h4 class="align-content-center">Adivinhe o nome da planta e ganhe um cupão de @Model.DiscountPercent% de desconto.</h4>
+    }
 </div>
 
 @if (TempData["Message"] != null)
@@ -34,7 +37,7 @@ else if (TempData["AlreadyParticipated"] != null)
 else
 {
     <div class="text-center">
-        <form asp-action="VerifyAnswer" method="post">
+        <form asp-action="GenerateCoupon" method="post">
             <div class="form-group">
                 <img src="@Model.Image" alt="@Model.Image" style="width: 400px;" />
             </div>
@@ -50,6 +53,9 @@ else
             </div>
             <div class="form-group">
                 <input type="hidden" name="Image" class="form-control" value="@Model.Image" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="DiscountPercent" class="form-control" value="@Model.DiscountPercent" />
             </div>
             <div class="form-group">
                 <input type="hidden" name="Tip" class="form-control" value="@Model.Tip" />
@@ -80,11 +86,13 @@ else
                         {
                             <li>
                                 <strong>Código:</strong> @coupon.Id <br />
-                                <strong>Desconto:</strong> @coupon.Discount%
-                                <strong>Valido até:</strong>@coupon.ExpirationDate
+                                <strong>Desconto:</strong> @coupon.DiscountPercent%
+                                <strong>Valido até:</strong>@coupon.ExpirationDate.ToString("dd/MM/yyyy")
                             </li>
                         }
                     </ul>
+                    <p>Será ativado automaticamente na sua próxima compra!</p>
+                    <p>Poderá consultar seu histórico de cupões em Meus Cupões</p>
                 </div>
             }
         </div>

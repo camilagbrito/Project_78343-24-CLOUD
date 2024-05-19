@@ -10,13 +10,7 @@ namespace Data.Mappings
         {
             builder.HasKey(p => p.Id);
 
-            builder.HasOne(c => c.AssociatedOrder)
-               .WithOne(o => o.Coupon)
-               .HasForeignKey<Coupon>(c => c.AssociatedOrderId);
-               
-
             builder.ToTable("Coupons");
-
         }
     }
     

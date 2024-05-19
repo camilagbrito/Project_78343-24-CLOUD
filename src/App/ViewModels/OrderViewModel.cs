@@ -12,8 +12,16 @@ namespace App.ViewModels
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
+        [DisplayName("Percentagem Desconto")]
+        public int DiscountPercent { get; set; }
+
+        [DisplayName("Cupão de Desconto")]
+        public Guid CouponId { get; set; }
+
+        [DisplayName("Cupão de Desconto")]
+        public CouponViewModel Coupon { get; set; }
+
         [DisplayName("Total do Pedido")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Total { get; set; }
         [DisplayName("Estado do Pedido")]
         public OrderStatus Status { get; set; }

@@ -3,6 +3,7 @@ using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
+using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,16 +19,18 @@ namespace App.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderItemRepository _orderItemRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly ICouponRepository _couponRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public OrdersController(IOrderRepository orderRepository, IOrderItemRepository orderItemRepository, IAddressRepository addressRepository, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public OrdersController(IOrderRepository orderRepository, IOrderItemRepository orderItemRepository, IAddressRepository addressRepository, ICouponRepository couponRepository, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
 
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _addressRepository = addressRepository;
+            _couponRepository = couponRepository;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -55,6 +58,10 @@ namespace App.Controllers
 
                     };
                     ordersViewModel.Add(orderViewModel);
+                }
+                if (ordersViewModel.IsNullOrEmpty())
+                {
+                    TempData["Empty"] = "Ainda não possui pedidos.";
                 }
                 return View(ordersViewModel);
             }
@@ -94,7 +101,7 @@ namespace App.Controllers
         public async Task<IActionResult> CreateOrder()
         {
             var cartItemsSession = HttpContext.Session.Get<List<OrderItemViewModel>>("Cart") ?? new List<OrderItemViewModel>();
-
+           
             if (cartItemsSession.IsNullOrEmpty())
             {
                 TempData["Message"] = "Seu carrinho está vazio.";
@@ -103,14 +110,18 @@ namespace App.Controllers
 
             var orderViewModel = new OrderViewModel();
 
+            await AddCoupon(orderViewModel);
+
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
 
             orderViewModel.Date = DateTime.Now;
             orderViewModel.UserId = user.Id;
             orderViewModel.Total = cartItemsSession.Sum(item => item.Product.Price * item.Quantity);
+            orderViewModel.Total = orderViewModel.Total - (orderViewModel.Total * orderViewModel.DiscountPercent / 100);
 
             await _orderRepository.Add(_mapper.Map<Order>(orderViewModel));
+            
 
             foreach (var item in cartItemsSession)
             {
@@ -124,6 +135,11 @@ namespace App.Controllers
                 await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
             }
 
+            var coupon = await _couponRepository.GetbyId(orderViewModel.CouponId);
+            coupon.Used = true;
+      
+            await _couponRepository.Update(coupon);
+           
             HttpContext.Session.Set("Cart", new List<ShoppingCartViewModel>());
 
             TempData["Sucess"] = "Compra efetuada com sucesso!";
@@ -136,6 +152,32 @@ namespace App.Controllers
             var order = _mapper.Map<OrderViewModel>(await _orderRepository.GetOrderandItems(id));
             order.Items = _mapper.Map<IEnumerable<OrderItemViewModel>>(await _orderItemRepository.GetOrderItemsByOrderId(id));
             return order;
+        }
+
+        [Authorize]
+        public async Task<OrderViewModel> AddCoupon(OrderViewModel orderViewModel)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var coupons = _mapper.Map<IEnumerable<CouponViewModel>>(await _couponRepository.GetCouponsByUserId(userId));
+            var activeCoupons = new List<CouponViewModel>();
+
+            foreach (var c in coupons)
+            {
+                if (!c.Expired == true && !c.Used == true)
+                {
+                    activeCoupons.Add(c);
+                }
+            }
+
+            var coupon = activeCoupons.LastOrDefault();
+
+            if (coupon != null)
+            {
+                orderViewModel.CouponId = coupon.Id;
+                orderViewModel.DiscountPercent = coupon.DiscountPercent;
+            }
+
+            return orderViewModel;
         }
     }
 

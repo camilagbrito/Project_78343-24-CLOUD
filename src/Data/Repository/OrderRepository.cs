@@ -29,7 +29,7 @@ namespace Data.Repository
 
         public async Task<Order> GetOrderUser(Guid id)
         {
-            return await _context.Orders.AsNoTracking().Include(o => o.User).FirstOrDefaultAsync(o => o.Id == id);
+            return await _context.Orders.AsNoTracking().Include(o => o.User).ThenInclude(u => u.Addresses).FirstOrDefaultAsync(o => o.Id == id);
         }
 
       
@@ -37,5 +37,12 @@ namespace Data.Repository
         {
             return await _context.Orders.AsNoTracking().Where(o => o.UserId == id).OrderByDescending(o => o.Date).ToListAsync();
         }
+
+        public async Task<Order> GetOrderByCouponId(Guid id)
+        {
+            return await _context.Orders.AsNoTracking().Where(o => o.CouponId == id).FirstOrDefaultAsync();
+        }
+
+
     }
 }

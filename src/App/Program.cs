@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration.AzureKeyVault;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EcomDbContext>();
@@ -40,19 +41,32 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+
+if (builder.Environment.IsDevelopment())
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    builder.Services.AddDbContext<EcomDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
+
+if(builder.Environment.IsProduction())
+{
     var keyVaultUrl = builder.Configuration.GetSection("KeyVault:KeyVaultURl");
     var keyVaultClientId = builder.Configuration.GetSection("KeyVault:ClientId");
     var keyVaultClientSecret = builder.Configuration.GetSection("KeyVault:ClientSecret");
     var keyVaultDirectoryID = builder.Configuration.GetSection("KeyVault:DirectoryID");
 
     var credential = new ClientSecretCredential(keyVaultDirectoryID.Value!.ToString(), keyVaultClientId.Value!.ToString(), keyVaultClientSecret.Value!.ToString());
-    
+
     builder.Configuration.AddAzureKeyVault(keyVaultUrl.Value!.ToString(), keyVaultClientId.Value!.ToString(), keyVaultClientSecret.Value.ToString(), new DefaultKeyVaultSecretManager());
-    
+
     var client = new SecretClient(new Uri(keyVaultUrl.Value!.ToString()), credential);
 
     builder.Services.AddDbContext<EcomDbContext>(options =>
     options.UseSqlServer(client.GetSecret("connection").Value.Value.ToString()));
+
+}
 
 var app = builder.Build();
 

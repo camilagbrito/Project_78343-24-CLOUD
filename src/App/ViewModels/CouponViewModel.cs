@@ -18,7 +18,7 @@ namespace App.ViewModels
 
         public DateTime ExpirationDate { get; set; }
         [DisplayName("Percentagem Desconto")]
-        public int Discount { get; set; }
+        public int DiscountPercent { get; set; }
         [DisplayName("Expirado")]
         public bool Expired { get; set; } = false;
         [DisplayName("Usado")]
@@ -28,7 +28,6 @@ namespace App.ViewModels
         public ApplicationUserViewModel User { get; set; }
         public ChallengeViewModel Challenge { get; set; }
         [DisplayName("Pedido Associado")]
-        public Guid AssociatedOrderId { get; set; }
         public OrderViewModel AssociatedOrder { get; set; }
     }
 }

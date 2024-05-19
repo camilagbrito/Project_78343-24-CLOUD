@@ -2,6 +2,7 @@
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
+using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -52,48 +53,46 @@ namespace App.Controllers
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         [Authorize]
-        public async Task<IActionResult> VerifyAnswer(ChallengeViewModel challengeViewModel)
+        public async Task<IActionResult> GenerateCoupon(ChallengeViewModel challengeViewModel)
         {
-            if (challengeViewModel.UserAnswer.ToUpper().Equals(challengeViewModel.RightAnswer.ToUpper()))
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var coupons = _mapper.Map<IEnumerable<CouponViewModel>>(await _couponRepository.GetCouponsByUserId(user.Id));
+            
+            var user = await _userManager.GetUserAsync(User);
+            var coupons = _mapper.Map<IEnumerable<CouponViewModel>>(await _couponRepository.GetCouponsByUserId(user.Id));
+            var validate = ValidateChallenge(challengeViewModel, user.Id, coupons);
 
-                if (ValidateChallenge(challengeViewModel, user.Id, coupons) == true && user != null)
+            if (challengeViewModel.UserAnswer.ToUpper().Equals(challengeViewModel.RightAnswer.ToUpper()) &&
+                validate == true && user != null)
+            {
+                var couponViewModel = new CouponViewModel
                 {
-                    var coupon = GenerateCoupon(user, challengeViewModel);
-                    challengeViewModel.Coupons = new List<CouponViewModel>();
-                    challengeViewModel.Coupons.Add(coupon.Result);
-                }
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.Now,
+                    ExpirationDate = DateTime.Now.AddDays(1),
+                    DiscountPercent = challengeViewModel.DiscountPercent,
+                    UserId = user.Id,
+                    ChallengeId = challengeViewModel.Id
+                };
+
+                await _couponRepository.Add(_mapper.Map<Coupon>(couponViewModel));
+             
+                challengeViewModel.Coupons = new List<CouponViewModel> { couponViewModel };
+
+                return View("Index", challengeViewModel);
             }
             else
             {
                 TempData["WrongAnswer"] = "Parece que a resposta não está correta! Tente novamente! " +
                     "Verifique se escreveu corretamente ou procure um sinônimo para esta planta.";
-            };
-
-            return View("Index", challengeViewModel);
-        }
-
-        public async Task<CouponViewModel> GenerateCoupon(ApplicationUser user, ChallengeViewModel challenge)
-        {
-            var couponViewModel = new CouponViewModel
-            {
-                Id = Guid.NewGuid(),
-                CreatedDate = DateTime.Now,
-                ExpirationDate = DateTime.Now.AddDays(1),
-                Discount = 10,
-                UserId = user.Id,
-                ChallengeId = challenge.Id
-            };
-
-           await _couponRepository.Add(_mapper.Map<Coupon>(couponViewModel));
-
-            return couponViewModel;
+                return View("Index", challengeViewModel);
+            }
         }
 
         public bool ValidateChallenge(ChallengeViewModel challenge, string userId, IEnumerable<CouponViewModel> coupons)
         {
+            if (challenge == null)
+            {
+                return false;
+            }
 
             coupons = ValidateUse(coupons).Result;
 
@@ -117,21 +116,16 @@ namespace App.Controllers
         {
             foreach (var coupon in coupons)
             {
-                if (coupon.AssociatedOrderId.ToString() != "00000000-0000-0000-0000-000000000000")
+
+                if (coupon.ExpirationDate.Date < DateTime.Now.Date)
                 {
-                    coupon.Used = true;
-                }
-                else
-                {
-                    if (coupon.ExpirationDate.Date < DateTime.Now.Date)
-                    {
-                        coupon.Expired = true;
-                    }
+                    coupon.Expired = true;
                 }
 
-                if (coupon.Expired == true || coupon.Used == true)
+
+                if (coupon.Expired == true)
                 {
-                   await _couponRepository.Update(_mapper.Map<Coupon>(coupon));
+                    await _couponRepository.Update(_mapper.Map<Coupon>(coupon));
                 }
             }
 

@@ -78,7 +78,7 @@ namespace App.Areas.Admin.Controllers
             }
 
             await _challengeRepository.Add(_mapper.Map<Challenge>(challengeViewModel));
-
+          
             return RedirectToAction(nameof(List));
         }
 

@@ -11,6 +11,12 @@
     <p class="alert alert-success"> @TempData["Sucess"]</p>
 }
 
+@if (TempData["Empty"] != null)
+{
+    <p class="alert alert-info"> @TempData["Empty"]</p>
+}
+
+
 <table class="table table-hover">
     <thead class="table-dark">
         <tr>

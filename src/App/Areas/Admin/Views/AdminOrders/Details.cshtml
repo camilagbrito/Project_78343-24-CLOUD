@@ -31,16 +31,16 @@
                 @Html.DisplayFor(model => model.ApplicationUserViewModel.FullName)
             </dd>
             <dt>Endereço de Entrega</dt>
-            <dd class ="col-sm-10">
+            <dd class="col-sm-10">
                 @foreach (var item in Model.ApplicationUserViewModel.Addresses)
                 {
-                    <tr>
-                        <td>@item.Street</td>
-                        <td>@item.Number </td>
-                        <td>@item.City</td>
-                        <td>@item.Region</td>
-                        <td>@item.Country</td>
-                    </tr>
+                <dt>
+                <dd>@item.Street</dd>
+                <dd>@item.Number </dd>
+                <dd>@item.City</dd>
+                <dd>@item.Region</dd>
+                <dd>@item.Country</dd>
+                </dt>
                 }
             </dd>
         </dl>
@@ -55,7 +55,7 @@
                 </tr>
             </thead>
             <tbody>
-            <h3>Itens do Pedido</h3>
+                <h3>Itens do Pedido</h3>
                 @foreach (var item in Model.Items)
                 {
                     <tr>
@@ -66,12 +66,26 @@
                         <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
                     </tr>
                 }
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Total:</td>
-            <td>@Model.Total.ToString("C")</td>
-            <td></td>
+                @if (Model.DiscountPercent != 0)
+                {
+                    <tr>
+                        <td></td>
+                        <td>Cupão utilizado:</td>
+                        <td>@Model.CouponId</td>
+                        <td>Desconto:</td>
+                        <td>@Model.DiscountPercent%</td>
+                        <td></td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>@Model.Total.ToString("C")</td>
+                    <td></td>
+                </tr>
+
             </tbody>
         </table>
     </div>
