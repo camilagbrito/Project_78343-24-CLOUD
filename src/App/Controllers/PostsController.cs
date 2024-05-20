@@ -1,15 +1,15 @@
 ﻿using App.ViewModels;
 using AutoMapper;
-using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
 using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Azure.Storage.Blobs.Specialized;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace App.Controllers
 {

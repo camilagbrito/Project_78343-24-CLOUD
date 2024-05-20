@@ -14,11 +14,13 @@ namespace App.Areas.Admin.Controllers
     {
 
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public AdminCategoriesController(ICategoryRepository repository, IMapper mapper)
+        public AdminCategoriesController(ICategoryRepository repository, IProductRepository productRepository, IMapper mapper)
         {
             _categoryRepository = repository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -104,7 +106,15 @@ namespace App.Areas.Admin.Controllers
         [Route("delete-category/{id:guid}")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-           
+            var categoryViewModel = _mapper.Map<CategoryViewModel>(await _categoryRepository.GetbyId(id));
+            var products = await _productRepository.Search(p => p.CategoryId == categoryViewModel.Id);
+
+            if (products.Any())
+            {
+                TempData["DeletionNotAllowed"] = "Não pode ser apagado! Existem produtos nesta categoria.";
+                return View(categoryViewModel);
+            }
+
             await _categoryRepository.Delete(id);
 
             return RedirectToAction(nameof(List));

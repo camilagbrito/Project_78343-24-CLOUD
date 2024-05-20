@@ -1,9 +1,5 @@
 ﻿#nullable disable
 
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
 using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
@@ -14,6 +10,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace App.Areas.Identity.Pages.Account
 {

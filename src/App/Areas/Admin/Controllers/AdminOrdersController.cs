@@ -3,11 +3,8 @@ using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
 using Business.Models.Enum;
-using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Azure;
-using System.Security.Policy;
 
 namespace App.Areas.Admin.Controllers
 {

@@ -1,5 +1,4 @@
-﻿using Business.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels
@@ -13,7 +12,6 @@ namespace App.ViewModels
         public string Image { get; set; }
 
         [DisplayName("Imagem")]
-        [Required(ErrorMessage = "Campo Requerido!")]
         public IFormFile ImageUpload { get; set; }
 
         [DisplayName("Resposta")] 

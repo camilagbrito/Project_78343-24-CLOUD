@@ -1,7 +1,6 @@
 ﻿using App.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
-using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

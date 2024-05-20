@@ -47,10 +47,10 @@ if (builder.Environment.IsDevelopment())
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
     builder.Services.AddDbContext<EcomDbContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 }
 
-if(builder.Environment.IsProduction())
+if (builder.Environment.IsProduction())
 {
     var keyVaultUrl = builder.Configuration.GetSection("KeyVault:KeyVaultURl");
     var keyVaultClientId = builder.Configuration.GetSection("KeyVault:ClientId");

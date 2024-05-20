@@ -1,7 +1,6 @@
 ﻿using App.ViewModels;
 using AutoMapper;
 using Business.Models;
-using System.Net;
 
 namespace App.AutoMapper
 {
