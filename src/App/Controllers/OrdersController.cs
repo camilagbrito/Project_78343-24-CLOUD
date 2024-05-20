@@ -134,11 +134,14 @@ namespace App.Controllers
                 await _orderItemRepository.Add(_mapper.Map<OrderItem>(orderItemViewModel));
             }
 
-            var coupon = await _couponRepository.GetbyId(orderViewModel.CouponId);
-            coupon.Used = true;
-      
-            await _couponRepository.Update(coupon);
-           
+            if (orderViewModel.Coupon != null)
+            {
+                var coupon = await _couponRepository.GetbyId((Guid)orderViewModel.CouponId);
+                coupon.Used = true;
+
+                await _couponRepository.Update(coupon);
+            }
+
             HttpContext.Session.Set("Cart", new List<ShoppingCartViewModel>());
 
             TempData["Sucess"] = "Compra efetuada com sucesso!";

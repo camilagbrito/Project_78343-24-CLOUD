@@ -23,5 +23,10 @@ namespace Data.Repository
         {
             return await _context.Products.AsNoTracking().Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == Id);
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByName(string ProductName)
+        {
+            return await _context.Products.AsNoTracking().Include(p => p.Category).Where(p => p.Name.Contains(ProductName)).ToListAsync();
+        }
     }
 }

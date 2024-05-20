@@ -6,6 +6,34 @@
 
 <h1>@ViewData["Title"]</h1>
 
+
+<div class="d-flex justify-content-between">
+    <div class="col-lg-3">
+        <div class="mb-3">
+            <form id="categoryForm" asp-action="List" method="get">
+                <div class="form-group mt-3">
+                    <label for="category"><h6>Filtrar por Categoria</h6></label>
+                    <select id="category" name="categoryId" class="form-control" asp-items="ViewBag.Categories">
+                        <option value="">Categoria</option>
+                        <option value="all">Todas</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="mb-3">
+            <form asp-action="List" method="get">
+                <div class="form-group mt-3">
+                    <label for="ProductName"></label>
+                    <input type="text" id="ProductName" name="ProductName" class="form-control" placeholder="Buscar Produto">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     @foreach (var item in Model)
     {
@@ -13,7 +41,7 @@
             <hr />
             <img src="@item.Image" alt="@item.Image" style="width:300px; height:300px; align-items:center" />
             <h4>
-               @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Name)
             </h4>
             <p>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -32,3 +60,18 @@
 </div>
 
 
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#category').change(function () {
+                $('#categoryForm').submit();
+            });
+
+            $('#category').change(function () {
+                if ($(this).val() !== 'all' && $(this).val() !== '') {
+                    $('#category').val('');
+                }
+            });
+        });
+    </script>
+}

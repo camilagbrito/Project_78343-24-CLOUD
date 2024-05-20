@@ -16,7 +16,7 @@ namespace App.ViewModels
         public int DiscountPercent { get; set; }
 
         [DisplayName("Cupão de Desconto")]
-        public Guid CouponId { get; set; }
+        public Guid? CouponId { get; set; }
 
         [DisplayName("Cupão de Desconto")]
         public CouponViewModel Coupon { get; set; }

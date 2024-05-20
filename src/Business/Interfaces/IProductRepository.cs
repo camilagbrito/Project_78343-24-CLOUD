@@ -1,4 +1,5 @@
 ﻿using Business.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Interfaces
 {
@@ -10,5 +11,7 @@ namespace Business.Interfaces
 
         Task<Product> GetProductandCategoryById(Guid Id);
 
+        Task<IEnumerable<Product>> GetProductsByName(string ProductName);
+       
     }
 }
