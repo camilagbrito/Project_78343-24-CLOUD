@@ -1,6 +1,4 @@
 ﻿using Business.Models.Enum;
-using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Business.Models
 {

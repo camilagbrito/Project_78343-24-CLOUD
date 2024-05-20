@@ -4,6 +4,11 @@
     ViewData["Title"] = "Deletar - " + Model.Name;
 }
 
+@if (TempData["DeletionNotAllowed"] != null)
+{
+    <p class="alert alert-danger"> @TempData["DeletionNotAllowed"]</p>
+}
+
 <h1>@ViewData["Title"]</h1>
 
 <h3>Tem certeza que quer deletar?</h3>

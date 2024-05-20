@@ -2,12 +2,9 @@
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
-using Data.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace App.Controllers

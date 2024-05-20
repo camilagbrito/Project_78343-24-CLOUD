@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Business.Models;
 using Microsoft.EntityFrameworkCore;
-using Business.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.Mappings
 {

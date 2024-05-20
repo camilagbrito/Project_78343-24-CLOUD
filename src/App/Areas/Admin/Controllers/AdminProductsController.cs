@@ -1,6 +1,5 @@
 ﻿using App.ViewModels;
 using AutoMapper;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
@@ -8,8 +7,6 @@ using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using static System.Net.WebRequestMethods;
 
 namespace App.Areas.Admin.Controllers
 {

@@ -1,31 +1,20 @@
 ﻿@model App.ViewModels.ChallengeViewModel
 
 @{
-    ViewData["Title"] = "Novo Desafio";
+    ViewData["Title"] = "Editar Desafio";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-warning">
-        @TempData["Message"]
-    </div>
-}
-
 <hr />
 <div class="row">
     <div class="col-md-10">
-        <form enctype="multipart/form-data" asp-action="Create">
+        <form enctype="multipart/form-data" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Tip" class="control-label"></label>
-                <input asp-for="Tip" class="form-control" />
+                <input asp-for="Tip" class="form-control"/>
                 <span asp-validation-for="Tip" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,16 +28,21 @@
                 <span asp-validation-for="RightAnswer" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUpload" class="control-label"></label>
-                <div class="custom-file" style="max-width: 400px;">
+                <label> Imagem Atual</label><br />
+                <img src="@Model.Image" alt="@Model.Image" style="width: 70px; height: 100px" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageUpload" class="control-label">Nova Imagem</label>
+                <div class="custom-file">
                     <input type="file" class="custom-file-input" id="ImageUpload" asp-for="ImageUpload" />
-                    <label style="width: 400px" class="custom-file-label" for="ImageUpload"></label>
-                    <span id="img_name" style="display: none;"></span>
+                    <label style="display: none" id="img_name"></label>
                 </div>
-                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="hidden" asp-for="@Model.Date" />
+                <input type="hidden" asp-for="@Model.Image" />
+                <input type="submit" value="Salvar" class="btn btn-primary" />
                 <a class="btn btn-info" asp-action="List">Voltar</a>
             </div>
         </form>
@@ -67,8 +61,6 @@
             $("img_name")[].style.display = 'block';
         });
 
-        $("ImageUpload").attr("data-val", "true");
-        $("#ImageUpload").attr("data-val-required", "Preencha o campo Imagem");
     </script>
 
 }
