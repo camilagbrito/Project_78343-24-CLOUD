@@ -220,7 +220,10 @@ namespace App.Controllers
                     return NotFound();
                 }
 
-                DeleteFileStorage(post.Image);
+                if(post.Image != null)
+                {
+                    DeleteFileStorage(post.Image);
+                }
 
                 await _postRepository.Delete(id);
             }

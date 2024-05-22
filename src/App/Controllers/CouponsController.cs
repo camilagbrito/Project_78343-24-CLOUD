@@ -37,16 +37,17 @@ namespace App.Controllers
 
                 foreach (var coupon in coupons)
                 {
-                    
+
                     var couponViewModel = ValidateExpiration(coupon);
 
-                    if(couponViewModel.Expired == true)
+                    if (couponViewModel.Expired == true)
                     {
-                        await _couponRepository.Update(_mapper.Map<Coupon>(couponViewModel));
+                        _couponRepository.Update(_mapper.Map<Coupon>(couponViewModel));
                     }
-                    
+
                     couponsViewModel.Add(couponViewModel);
                 }
+
 
                 if (couponsViewModel.IsNullOrEmpty())
                 {
@@ -64,7 +65,7 @@ namespace App.Controllers
 
         private CouponViewModel ValidateExpiration(CouponViewModel coupon)
         {
-           if(coupon.ExpirationDate.Date < DateTime.Now.Date)
+           if(coupon.Used != true && coupon.ExpirationDate.Date < DateTime.Now.Date)
             {
                 coupon.Expired = true;
             }
