@@ -10,6 +10,23 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore project dependencies'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/*.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests'
+  inputs:
+    command: 'test'
+    projects: '**/Tests.csproj'
 - task: Docker@2
   inputs:
     containerRegistry: 'DockerHub'
