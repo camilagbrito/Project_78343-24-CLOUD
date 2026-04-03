@@ -33,9 +33,7 @@ Tem como objetivo a utilização de recursos da plataforma azure. Assim, foram u
 O Projeto foi desenvolvido no Visual Studio 2022, com .net 8.0.
 
 A autenticação foi feita com o auxílio do Identity da Microsoft, com as devidas alterações para o modelo desejado, possibilitando login e registo de utilizadores.
-Para fins de projeto de estudo, o User Admin foi criado com seed durante do desenvolvimento e encontra-se na base de dados com o seguinte login: admin@localhost.com e senha: Admin123*
 
-Está disponível provisóriamente e para fins de conferência no link: (contactar)
 A pipeline foi desenvolvida na plataforma AzureDevops.
 
 Este projeto pode ser baixado e utilizado localmente, com a configuração de uma database SQLServer e com a adaptação dos métodos de UploadImage das controllers Challenges, Products e Posts para um repositório local ou outro repositório online.
